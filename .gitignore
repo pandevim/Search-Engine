@@ -1,0 +1,23 @@
+# General
+.DS_Store
+*.log
+.vscode/
+
+# Rust
+target/
+**/*.rs.bk
+
+# Node.js / Svelte
+node_modules/
+.svelte-kit/
+build/
+dist/
+.env
+.env.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Data
+wikipedia-simple-html-dump/
+data/crawled.lst

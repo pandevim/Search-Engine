@@ -1,0 +1,10 @@
+[package]
+name = "crawler"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+scraper = "0.22.0"
+url = "2.5.4"
+anyhow = "1.0.95"
+
