@@ -73,13 +73,16 @@ async fn search_handler(
         });
     }
 
-    let results = search(q, &data);
+    let all_results = search(q, &data);
+    let total_results = all_results.len();
     let duration = start.elapsed();
+
+    let results: Vec<SearchResult> = all_results.into_iter().take(50).collect();
 
     HttpResponse::Ok().json(SearchResponse {
         query: q.to_string(),
         results,
-        total_results: 0, // We'll update this logic
+        total_results,
         time_taken_ms: duration.as_secs_f64() * 1000.0,
     })
 }
