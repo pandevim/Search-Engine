@@ -4,6 +4,9 @@ use std::collections::HashSet;
 use std::collections::VecDeque;
 use std::env;
 use std::fs;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::{mpsc, Arc};
+use std::thread;
 use std::io::Write;
 use std::path::{Path, PathBuf};
 use url::Url;
@@ -51,12 +54,35 @@ fn crawl(seed_path: PathBuf, root_dir: &Path) -> Result<()> {
 
     let selector = Selector::parse("a").unwrap();
 
-    while let Some(curr_path) = queue.pop_front() {
-        if visited.len() >= 10000 {
-            println!("Reached limit of 10000 files. Stopping. Intentional break to stop memory issues.");
+    // Setup cancellation via Ctrl+C
+    let running = Arc::new(AtomicBool::new(true));
+    let r = running.clone();
+    ctrlc::set_handler(move || {
+        println!("\nCtrl+C received. Stopping crawler gracefully...");
+        r.store(false, Ordering::SeqCst);
+    }).expect("Error setting Ctrl-C handler");
 
+    println!("Crawler started. Press Ctrl+C at any time to stop and save progress.");
+
+    // Spawn a logger thread to print asynchronously
+    let (tx, rx) = mpsc::channel::<String>();
+    let logger_handle = thread::spawn(move || {
+        while let Ok(msg) = rx.recv() {
+            println!("{}", msg);
+        }
+    });
+
+    while let Some(curr_path) = queue.pop_front() {
+        // Check if we should stop
+        if !running.load(Ordering::SeqCst) {
             break;
         }
+
+        // Send log message asynchronously
+        let _ = tx.send(format!("Crawling: {:?}", curr_path));
+
+        // Removed hard limit of 10000 files to allow user to stop manually
+        // if visited.len() >= 10000 { break; }
 
         let content = fs::read_to_string(&curr_path);
         if content.is_err() {
@@ -112,6 +138,10 @@ fn crawl(seed_path: PathBuf, root_dir: &Path) -> Result<()> {
             }
         }
     }
+
+    // Drop the sender to close the channel and wait for logger to finish
+    drop(tx);
+    let _ = logger_handle.join();
 
     // Write to lst file
     let output_path = Path::new("data/crawled.lst");

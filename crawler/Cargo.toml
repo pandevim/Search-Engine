@@ -7,4 +7,5 @@ edition = "2024"
 scraper = "0.22.0"
 url = "2.5.4"
 anyhow = "1.0.95"
+ctrlc = "3.4"
 
