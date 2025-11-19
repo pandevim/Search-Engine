@@ -38,12 +38,13 @@ pub fn load_lemmatization_file<P: AsRef<Path>>(&mut self, path: P) -> io::Result
         let parts: Vec<&str> = line.split_whitespace().collect();
         if parts.len() >= 2 {
             // Column 0 is the Target (Lemma)
-            // Column 1 is the Source (Inflected form)
+            // Column 1+ are the Source forms (Inflected forms)
             let lemma = parts[0].to_string();
-            let inflected = parts[1].to_string();
             
-            // Map the inflected word to its lemma
-            self.lemmatizer.insert(inflected, lemma);
+            // Map each inflected form to its lemma
+            for &inflected_form in &parts[1..] {
+                self.lemmatizer.insert(inflected_form.to_string(), lemma.clone());
+            }
         }
     }
     Ok(())
