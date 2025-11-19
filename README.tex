@@ -126,7 +126,7 @@ The \texttt{linguist} component is a text processing library responsible for pre
 \begin{enumerate}
     \item \textbf{Casefolding}: Converts all text to lowercase to ensure case-insensitive matching.
     \item \textbf{Tokenization}: Splits text into individual tokens (words) based on punctuation and whitespace.
-    \item \textbf{Stopword Removal}: Filters out common English filler words (e.g., "the", "is", "at") to reduce index size and improve relevance. Uses \texttt{data/stopwords-en.txt} (\href{https://github.com/stopwords-iso/stopwords-en}{Source}).
+    \item \textbf{Stopword Removal}: Filters out common English filler words (e.g., "the", "is", "at") to reduce index size and improve relevance. Uses \texttt{data/stopwords-en.txt}.
     \item \textbf{Lemmatization}: Reduces words to their root form (e.g., "running" $\rightarrow$ "run") using a dictionary-based approach sourced from \texttt{data/lemmatization-en.txt} (\href{https://github.com/michmech/lemmatization-lists}{Source}).
 \end{enumerate}
 
@@ -218,7 +218,7 @@ The client is a modern web interface built with \textbf{SvelteKit} that consumes
     \item Rust toolchain (Cargo, rustc)
     \item Local Wikipedia dump extracted to \texttt{wikipedia-simple-html-dump/} directory
     \item Lemmatization dictionary at \texttt{data/lemmatization-en.txt} (\href{https://github.com/michmech/lemmatization-lists}{Source})
-    \item Stopwords list at \texttt{data/stopwords-en.txt} (\href{https://github.com/stopwords-iso/stopwords-en}{Source})
+    \item Stopwords list at \texttt{data/stopwords-en.txt}
 \end{itemize}
 
 \subsection{Configuration}
@@ -295,7 +295,7 @@ This will create a `fixtures/` directory populated with input (`.txt`) and outpu
 
 The data used for this search engine is sourced from the Wikimedia Dumps, specifically the Simple English Wikipedia Database dump, which can be found at \href{https://dumps.wikimedia.org/}{dumps.wikimedia.org}.
 The lemmatization list is sourced from \href{https://github.com/michmech/lemmatization-lists}{michmech/lemmatization-lists}.
-The stopwords list is sourced from \href{https://github.com/stopwords-iso/stopwords-en}{stopwords-iso/stopwords-en}.
+The stopwords list is sourced from the `nltk` python library.
 
 \newpage
 
