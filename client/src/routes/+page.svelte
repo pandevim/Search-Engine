@@ -57,7 +57,7 @@
         disabled={loading}
       />
       <button on:click={handleSearch} disabled={loading}>
-        {loading ? 'Searching...' : 'Search'}
+        {'Search'}
       </button>
     </div>
   </div>
