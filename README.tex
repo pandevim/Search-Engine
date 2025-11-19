@@ -84,10 +84,6 @@ This project is a search engine built in Rust, designed to index and search a lo
 │   ├── Cargo.toml
 │   └── src/
 │       └── lib.rs
-├── search/
-│   ├── Cargo.toml
-│   └── src/
-│       └── main.rs
 ├── server/
 │   ├── Cargo.toml
 │   └── src/
@@ -180,10 +176,8 @@ The search engine uses a sophisticated ranking function that combines two releva
 
 \subsubsection*{Features}
 \begin{itemize}
-    \item \textbf{Interactive CLI}: A command-line loop that accepts user queries.
     \item \textbf{Boolean AND Search}: Supports multi-word queries by finding the intersection of documents containing all terms.
     \item \textbf{Ranked Results}: Returns results sorted by relevance score.
-    \item \textbf{Result Display}: Shows the top 10 matching document paths, titles, and scores.
 \end{itemize}
 
 \subsection{Server (REST API)}
@@ -246,13 +240,6 @@ To build the index from the crawled data. This will process the files listed in 
 
 \begin{verbatim}
 cargo run --manifest-path indexer/Cargo.toml
-\end{verbatim}
-
-\subsection{Running the Search}
-To start the search engine interface. This loads the generated index files and allows you to query the dataset.
-
-\begin{verbatim}
-cargo run --manifest-path search/Cargo.toml
 \end{verbatim}
 
 \subsection{Running the Server}
