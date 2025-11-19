@@ -1,0 +1,307 @@
+{
+  "query": "computer science",
+  "results": [
+    {
+      "id": 84133,
+      "path": "simple/articles/p/o/p/Popular_science.html",
+      "title": "Popular science - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.51044680106645
+    },
+    {
+      "id": 56222,
+      "path": "simple/articles/h/a/i/User~Haikon_Sandbox_d12c.html",
+      "title": "User:Haikon/Sandbox - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.465999211078145
+    },
+    {
+      "id": 58878,
+      "path": "simple/articles/h/u/m/Human_science.html",
+      "title": "Human science - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.407215484273157
+    },
+    {
+      "id": 91203,
+      "path": "simple/articles/s/c/i/Science_fiction_film.html",
+      "title": "Science fiction film - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.370834223524819
+    },
+    {
+      "id": 91217,
+      "path": "simple/articles/s/c/i/Science.html",
+      "title": "Science - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.260467866623376
+    },
+    {
+      "id": 94019,
+      "path": "simple/articles/s/o/c/Social_sciences.html",
+      "title": "Social sciences - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.205844777164652
+    },
+    {
+      "id": 82658,
+      "path": "simple/articles/p/h/i/Philosophy_of_science.html",
+      "title": "Philosophy of science - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.137549103361744
+    },
+    {
+      "id": 91200,
+      "path": "simple/articles/s/c/i/Talk~Science_ab1a.html",
+      "title": "Talk:Science - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.134998966912644
+    },
+    {
+      "id": 94093,
+      "path": "simple/articles/s/o/i/Soil_science.html",
+      "title": "Soil science - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.101597155711024
+    },
+    {
+      "id": 67636,
+      "path": "simple/articles/l/i/f/Talk~Life_science_c730.html",
+      "title": "Talk:Life science - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.086141063110729
+    },
+    {
+      "id": 67553,
+      "path": "simple/articles/l/i/b/Category~Library_and_information_science_810d.html",
+      "title": "Category:Library and information science - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.06096074801102
+    },
+    {
+      "id": 91199,
+      "path": "simple/articles/s/c/i/Category~Science_fiction_0efa.html",
+      "title": "Category:Science fiction - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.059138036689767
+    },
+    {
+      "id": 76685,
+      "path": "simple/articles/n/a/t/Category~National_Medal_of_Science_laureates_dfa0.html",
+      "title": "Category:National Medal of Science laureates - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.994751865983336
+    },
+    {
+      "id": 97321,
+      "path": "simple/articles/s/y/s/Systems_science.html",
+      "title": "Systems science - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.981299630127838
+    },
+    {
+      "id": 72945,
+      "path": "simple/articles/m/e/m/Category~Members_of_the_National_Academy_of_Sciences_5801.html",
+      "title": "Category:Members of the National Academy of Sciences - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.98018621296752
+    },
+    {
+      "id": 83982,
+      "path": "simple/articles/p/o/l/Political_science.html",
+      "title": "Political science - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.969545646061315
+    },
+    {
+      "id": 91237,
+      "path": "simple/articles/s/c/i/Science_fiction.html",
+      "title": "Science fiction - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.966921601762
+    },
+    {
+      "id": 49282,
+      "path": "simple/articles/f/e/l/Category~Fellows_of_the_American_Academy_of_Arts_and_Sciences_3373.html",
+      "title": "Category:Fellows of the American Academy of Arts and Sciences - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.908146876827475
+    },
+    {
+      "id": 25686,
+      "path": "simple/articles/a/n/a/Analog_Science_Fiction_and_Fact_888e.html",
+      "title": "Analog Science Fiction and Fact - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.884829463093993
+    },
+    {
+      "id": 96450,
+      "path": "simple/articles/s/u/b/Category~Subfields_of_political_science_e00d.html",
+      "title": "Category:Subfields of political science - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.83679258817238
+    },
+    {
+      "id": 56602,
+      "path": "simple/articles/h/a/r/Hard_science.html",
+      "title": "Hard science - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.795550747225665
+    },
+    {
+      "id": 99185,
+      "path": "simple/articles/t/h/e/Category~Theoretical_computer_science_6612.html",
+      "title": "Category:Theoretical computer science - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.78170127245864
+    },
+    {
+      "id": 32542,
+      "path": "simple/articles/b/o/w/User~BowToChris_WikiProject_Computer_Science_b705.html",
+      "title": "User:BowToChris/WikiProject Computer Science - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.774794972295954
+    },
+    {
+      "id": 91232,
+      "path": "simple/articles/s/c/i/Category~Science_11a2.html",
+      "title": "Category:Science - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.7721576781884
+    },
+    {
+      "id": 99119,
+      "path": "simple/articles/t/h/e/Theoretical_computer_science.html",
+      "title": "Theoretical computer science - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.761019083070872
+    },
+    {
+      "id": 91211,
+      "path": "simple/articles/s/c/i/Category~Science_navigational_templates_4934.html",
+      "title": "Category:Science navigational templates - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.707511278383727
+    },
+    {
+      "id": 91183,
+      "path": "simple/articles/s/c/i/Science_Olympiad_b3c2.html",
+      "title": "Science Olympiad - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.665360198702409
+    },
+    {
+      "id": 91187,
+      "path": "simple/articles/s/c/i/Category~Science_fiction_movies_d165.html",
+      "title": "Category:Science fiction movies - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.572443342061945
+    },
+    {
+      "id": 38730,
+      "path": "simple/articles/c/o/m/Computer_science.html",
+      "title": "Computer science - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.57020949248916
+    },
+    {
+      "id": 57103,
+      "path": "simple/articles/h/e/i/Heinrich-Heine-University_e28f.html",
+      "title": "Heinrich-Heine-University - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.514718357804545
+    },
+    {
+      "id": 38859,
+      "path": "simple/articles/c/o/m/Category~Computer_science_ea63.html",
+      "title": "Category:Computer science - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.488552300431063
+    },
+    {
+      "id": 42946,
+      "path": "simple/articles/d/a/v/User~Davidc_ac40.html",
+      "title": "User:Davidc - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.447211088455038
+    },
+    {
+      "id": 107154,
+      "path": "simple/articles/w/i/c/Wicked_Science_3bc1.html",
+      "title": "Wicked Science - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.446845530223307
+    },
+    {
+      "id": 38857,
+      "path": "simple/articles/c/o/m/Complex_systems.html",
+      "title": "Complex systems - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.445482520358556
+    },
+    {
+      "id": 98803,
+      "path": "simple/articles/t/h/e/The_Eye_of_the_Heron_dbf7.html",
+      "title": "The Eye of the Heron - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.412948321745258
+    },
+    {
+      "id": 91225,
+      "path": "simple/articles/s/c/i/Category~Science_fiction_books_f759.html",
+      "title": "Category:Science fiction books - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.406680789885591
+    },
+    {
+      "id": 91181,
+      "path": "simple/articles/s/c/i/Category~Science_fiction_television_series_c4c5.html",
+      "title": "Category:Science fiction television series - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.37550143437507
+    },
+    {
+      "id": 68650,
+      "path": "simple/articles/l/i/s/List_of_GCSE_subjects_e7cd.html",
+      "title": "List of GCSE subjects - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.362675563469743
+    },
+    {
+      "id": 38736,
+      "path": "simple/articles/c/o/m/Talk~Computer_science_2075.html",
+      "title": "Talk:Computer science - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.32763555150089
+    },
+    {
+      "id": 38854,
+      "path": "simple/articles/c/o/m/Complexity.html",
+      "title": "Complexity - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.31252124247022
+    },
+    {
+      "id": 91195,
+      "path": "simple/articles/s/c/i/Scientific_theory.html",
+      "title": "Scientific theory - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.291880450635436
+    },
+    {
+      "id": 79404,
+      "path": "simple/articles/o/b/j/Objectivity_(science).html",
+      "title": "Objectivity (science) - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.288916945863374
+    },
+    {
+      "id": 49220,
+      "path": "simple/articles/f/e/c/Talk~Fecund_universes_7a39.html",
+      "title": "Talk:Fecund universes - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.284446255609364
+    },
+    {
+      "id": 93915,
+      "path": "simple/articles/s/o/c/Category~Social_sciences_7e1c.html",
+      "title": "Category:Social sciences - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.283866546919146
+    },
+    {
+      "id": 80574,
+      "path": "simple/articles/o/r/t/Orthology_(language).html",
+      "title": "Orthology (language) - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.28299715686645
+    },
+    {
+      "id": 58787,
+      "path": "simple/articles/h/u/g/Hugo_Award_a4a2.html",
+      "title": "Hugo Award - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.259376252043264
+    },
+    {
+      "id": 76740,
+      "path": "simple/articles/n/a/t/Category~Natural_science_and_nature_navigational_templates_e941.html",
+      "title": "Category:Natural science and nature navigational templates - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.241994460457324
+    },
+    {
+      "id": 73185,
+      "path": "simple/articles/m/e/s/Message_(computer_science).html",
+      "title": "Message (computer science) - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.212183435613701
+    },
+    {
+      "id": 94856,
+      "path": "simple/articles/s/p/e/Special_effects.html",
+      "title": "Special effects - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.176123386793972
+    },
+    {
+      "id": 69763,
+      "path": "simple/articles/l/s/y/User~Lsy098_Weblinks_(test)_acba.html",
+      "title": "User:Lsy098/Weblinks (test) - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.15656554413734
+    }
+  ],
+  "total_results": 1829,
+  "time_taken_ms": 4.227926
+}

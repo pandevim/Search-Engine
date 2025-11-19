@@ -72,6 +72,10 @@ This project is a search engine built in Rust, designed to index and search a lo
 │   ├── seed.lst
 │   ├── stopwords-en.txt
 │   └── trie.bin
+├── fixtures/
+│   ├── 01_basic_search_input.txt
+│   ├── 01_basic_search_output.json
+│   └── ...
 ├── indexer/
 │   ├── Cargo.toml
 │   └── src/
@@ -91,13 +95,13 @@ This project is a search engine built in Rust, designed to index and search a lo
 │       └── main.rs
 ├── wikipedia-simple-html-dump/
 │   └── ... (HTML files)
-├── README.pdf
+├── generate_fixtures.py
 └── README.tex
 \end{verbatim}
 
 \section{Components}
 
-\subsection{1. Crawler}
+\subsection{Crawler}
 
 The crawler is responsible for traversing the local Wikipedia HTML files to discover and list all available articles.
 
@@ -120,7 +124,7 @@ simple/articles/a/r/t/Article_Name.html
 ...
 \end{verbatim}
 
-\subsection{2. Linguist}
+\subsection{Linguist}
 The \texttt{linguist} component is a text processing library responsible for preparing raw text for indexing.
 
 \subsubsection*{Pipeline}
@@ -131,7 +135,7 @@ The \texttt{linguist} component is a text processing library responsible for pre
     \item \textbf{Stemming/Lemmatization}: Reduces words to their root form (e.g., "running" $\rightarrow$ "run") using a dictionary-based approach sourced from \texttt{data/lemmatization-en.txt} (\href{https://github.com/michmech/lemmatization-lists}{Source}).
 \end{enumerate}
 
-\subsection{3. Indexer}
+\subsection{Indexer}
 The indexer builds an efficient inverted index from the processed documents.
 
 \subsubsection*{Architecture}
@@ -151,7 +155,7 @@ Following the standard inverted index design:
     \item \textbf{Serialization}: Saves the occurrence lists, document metadata, and the Trie to disk using \texttt{bincode}.
 \end{enumerate}
 
-\subsection{4. Search \& Ranking}
+\subsection{Search \& Ranking}
 The search component provides the user interface for querying the index and ranking results.
 
 \subsubsection*{Ranking Algorithm}
@@ -183,7 +187,7 @@ The search engine uses a sophisticated ranking function that combines two releva
     \item \textbf{Result Display}: Shows the top 10 matching document paths, titles, and scores.
 \end{itemize}
 
-\subsection{5. Server (REST API)}
+\subsection{Server (REST API)}
 The server component exposes the search functionality via a RESTful API using \texttt{actix-web}.
 
 \subsubsection*{Endpoints}
@@ -204,7 +208,7 @@ The server component exposes the search functionality via a RESTful API using \t
 }
 \end{verbatim}
 
-\subsection{6. Client (Web UI)}
+\subsection{Client (Web UI)}
 The client is a modern web interface built with \textbf{SvelteKit} that consumes the REST API.
 
 \subsubsection*{Features}
@@ -231,35 +235,35 @@ The crawler uses a \texttt{seed.lst} file in the \texttt{data/} directory to det
 simple/index.html
 \end{verbatim}
 
-\subsection{1. Running the Crawler}
+\subsection{Running the Crawler}
 To execute the crawler from the project root. This will traverse the \texttt{wikipedia-simple-html-dump} directory and generate \texttt{data/crawled.lst}.
 
 \begin{verbatim}
 cargo run --manifest-path crawler/Cargo.toml
 \end{verbatim}
 
-\subsection{2. Running the Indexer}
+\subsection{Running the Indexer}
 To build the index from the crawled data. This will process the files listed in \texttt{crawled.lst} and generate \texttt{data/inverted\_index.bin} and \texttt{data/trie.bin}.
 
 \begin{verbatim}
 cargo run --manifest-path indexer/Cargo.toml
 \end{verbatim}
 
-\subsection{3. Running the Search}
+\subsection{Running the Search}
 To start the search engine interface. This loads the generated index files and allows you to query the dataset.
 
 \begin{verbatim}
 cargo run --manifest-path search/Cargo.toml
 \end{verbatim}
 
-\subsection{4. Running the Server}
+\subsection{Running the Server}
 To start the REST API server on \texttt{http://127.0.0.1:8080}.
 
 \begin{verbatim}
 cargo run --manifest-path server/Cargo.toml
 \end{verbatim}
 
-\subsection{5. Running the Client}
+\subsection{Running the Client}
 To start the web interface. Ensure you have Node.js installed.
 
 \textbf{Important:} The client requires a symbolic link to the Wikipedia dump to serve the files locally.
@@ -287,6 +291,19 @@ To run the unit tests for the Linguist library (stemmer, tokenizer, etc.):
 \begin{verbatim}
 cargo test --manifest-path linguist/Cargo.toml
 \end{verbatim}
+
+\subsection{Generating Test Fixtures}
+A Python script is included to generate a set of test cases for the search API, covering various boundary conditions. This script requires the server to be running.
+
+\begin{enumerate}
+    \item Ensure the server is running (see above).
+    \item Run the script from the project root:
+    \begin{verbatim}
+python3 generate_fixtures.py
+    \end{verbatim}
+\end{enumerate}
+
+This will create a `fixtures/` directory populated with input (`.txt`) and output (`.json`) files for each test case, such as basic searches, empty queries, and queries with special characters.
 
 \section{Data Source}
 

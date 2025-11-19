@@ -1,0 +1,307 @@
+{
+  "query": "computer algorithm",
+  "results": [
+    {
+      "id": 24730,
+      "path": "simple/articles/a/l/g/Algorithm.html",
+      "title": "Algorithm - Simple English Wikipedia, the free encyclopedia",
+      "score": 15.466743053255845
+    },
+    {
+      "id": 36281,
+      "path": "simple/articles/c/h/e/Category~Checksum_algorithms_c4ed.html",
+      "title": "Category:Checksum algorithms - Simple English Wikipedia, the free encyclopedia",
+      "score": 14.93619490830322
+    },
+    {
+      "id": 48177,
+      "path": "simple/articles/e/u/c/Euclidean_algorithm.html",
+      "title": "Euclidean algorithm - Simple English Wikipedia, the free encyclopedia",
+      "score": 14.82876457245948
+    },
+    {
+      "id": 48643,
+      "path": "simple/articles/e/x/p/Exponentiation_by_squaring.html",
+      "title": "Exponentiation by squaring - Simple English Wikipedia, the free encyclopedia",
+      "score": 14.631690272592245
+    },
+    {
+      "id": 24714,
+      "path": "simple/articles/a/l/g/Category~Algorithms_e36c.html",
+      "title": "Category:Algorithms - Simple English Wikipedia, the free encyclopedia",
+      "score": 14.540286656714459
+    },
+    {
+      "id": 64896,
+      "path": "simple/articles/k/e/y/Key_(cryptography).html",
+      "title": "Key (cryptography) - Simple English Wikipedia, the free encyclopedia",
+      "score": 14.370937923959335
+    },
+    {
+      "id": 89242,
+      "path": "simple/articles/r/s/a/RSA_algorithm_365b.html",
+      "title": "RSA algorithm - Simple English Wikipedia, the free encyclopedia",
+      "score": 14.276495682282619
+    },
+    {
+      "id": 66762,
+      "path": "simple/articles/l/a/s/Las_Vegas_algorithm_a253.html",
+      "title": "Las Vegas algorithm - Simple English Wikipedia, the free encyclopedia",
+      "score": 14.253259717613089
+    },
+    {
+      "id": 38963,
+      "path": "simple/articles/c/o/m/Complexity_theory.html",
+      "title": "Complexity theory - Simple English Wikipedia, the free encyclopedia",
+      "score": 13.954702992164759
+    },
+    {
+      "id": 101139,
+      "path": "simple/articles/t/r/a/Travelling_Salesman_Problem_1210.html",
+      "title": "Travelling Salesman Problem - Simple English Wikipedia, the free encyclopedia",
+      "score": 13.82477519925755
+    },
+    {
+      "id": 43326,
+      "path": "simple/articles/d/e/c/Decidability_theory.html",
+      "title": "Decidability theory - Simple English Wikipedia, the free encyclopedia",
+      "score": 13.50027961714878
+    },
+    {
+      "id": 57587,
+      "path": "simple/articles/h/e/u/Heuristic.html",
+      "title": "Heuristic - Simple English Wikipedia, the free encyclopedia",
+      "score": 13.347413399426777
+    },
+    {
+      "id": 67944,
+      "path": "simple/articles/l/i/n/Linear_search.html",
+      "title": "Linear search - Simple English Wikipedia, the free encyclopedia",
+      "score": 13.259955812322865
+    },
+    {
+      "id": 39070,
+      "path": "simple/articles/c/o/m/Computational_complexity_theory.html",
+      "title": "Computational complexity theory - Simple English Wikipedia, the free encyclopedia",
+      "score": 13.245940216434992
+    },
+    {
+      "id": 74793,
+      "path": "simple/articles/m/o/n/Monte_Carlo_algorithm_a93e.html",
+      "title": "Monte Carlo algorithm - Simple English Wikipedia, the free encyclopedia",
+      "score": 12.897415041621965
+    },
+    {
+      "id": 94352,
+      "path": "simple/articles/s/o/r/Sorting_algorithm.html",
+      "title": "Untitled",
+      "score": 12.886690254362351
+    },
+    {
+      "id": 48167,
+      "path": "simple/articles/e/u/c/Euclidian_algorithm.html",
+      "title": "Untitled",
+      "score": 12.84022637143076
+    },
+    {
+      "id": 66758,
+      "path": "simple/articles/l/a/s/Las-Vegas_algorithm_7664.html",
+      "title": "Untitled",
+      "score": 12.794124319477339
+    },
+    {
+      "id": 74851,
+      "path": "simple/articles/m/o/n/Monte-Carlo_algorithm_75ef.html",
+      "title": "Untitled",
+      "score": 12.794124319477339
+    },
+    {
+      "id": 38730,
+      "path": "simple/articles/c/o/m/Computer_science.html",
+      "title": "Computer science - Simple English Wikipedia, the free encyclopedia",
+      "score": 12.285557325893476
+    },
+    {
+      "id": 38398,
+      "path": "simple/articles/c/o/d/Code.html",
+      "title": "Code - Simple English Wikipedia, the free encyclopedia",
+      "score": 11.964329734636493
+    },
+    {
+      "id": 53046,
+      "path": "simple/articles/g/c/d/Template~Gcd_doc_0b3c.html",
+      "title": "Template:Gcd/doc - Simple English Wikipedia, the free encyclopedia",
+      "score": 11.716428171620027
+    },
+    {
+      "id": 53045,
+      "path": "simple/articles/g/c/d/Template~Gcd_9a10.html",
+      "title": "Template:Gcd - Simple English Wikipedia, the free encyclopedia",
+      "score": 11.697504861658967
+    },
+    {
+      "id": 53230,
+      "path": "simple/articles/g/e/n/Genome_(disambiguation).html",
+      "title": "Genome (disambiguation) - Simple English Wikipedia, the free encyclopedia",
+      "score": 11.6038819947098
+    },
+    {
+      "id": 49438,
+      "path": "simple/articles/f/e/r/Fermat's_primality_test.html",
+      "title": "Fermat's primality test - Simple English Wikipedia, the free encyclopedia",
+      "score": 11.403571103085257
+    },
+    {
+      "id": 74594,
+      "path": "simple/articles/m/o/d/Modular_Audio_Recognition_Framework_d995.html",
+      "title": "Modular Audio Recognition Framework - Simple English Wikipedia, the free encyclopedia",
+      "score": 11.074841499328715
+    },
+    {
+      "id": 24723,
+      "path": "simple/articles/a/l/g/Talk~Algorithm_e053.html",
+      "title": "Talk:Algorithm - Simple English Wikipedia, the free encyclopedia",
+      "score": 10.682822795922908
+    },
+    {
+      "id": 89243,
+      "path": "simple/articles/r/s/a/Talk~RSA_algorithm_cc38.html",
+      "title": "Talk:RSA algorithm - Simple English Wikipedia, the free encyclopedia",
+      "score": 10.590846749183049
+    },
+    {
+      "id": 100682,
+      "path": "simple/articles/t/o/p/Topology.html",
+      "title": "Topology - Simple English Wikipedia, the free encyclopedia",
+      "score": 10.13313740900143
+    },
+    {
+      "id": 41851,
+      "path": "simple/articles/c/r/y/Category~Cryptography_3689.html",
+      "title": "Category:Cryptography - Simple English Wikipedia, the free encyclopedia",
+      "score": 10.046606328887071
+    },
+    {
+      "id": 39055,
+      "path": "simple/articles/c/o/m/Computable_function.html",
+      "title": "Computable function - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.992889607346303
+    },
+    {
+      "id": 69256,
+      "path": "simple/articles/l/o/g/Logic.html",
+      "title": "Logic - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.891842147037206
+    },
+    {
+      "id": 99185,
+      "path": "simple/articles/t/h/e/Category~Theoretical_computer_science_6612.html",
+      "title": "Category:Theoretical computer science - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.70848977089756
+    },
+    {
+      "id": 99119,
+      "path": "simple/articles/t/h/e/Theoretical_computer_science.html",
+      "title": "Theoretical computer science - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.634021414069284
+    },
+    {
+      "id": 53288,
+      "path": "simple/articles/g/e/n/Genetic.html",
+      "title": "Genetic - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.585079383799897
+    },
+    {
+      "id": 84907,
+      "path": "simple/articles/p/r/i/Primality_test.html",
+      "title": "Primality test - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.536689082751124
+    },
+    {
+      "id": 89241,
+      "path": "simple/articles/r/s/a/RSA_445d.html",
+      "title": "RSA - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.3871975431464
+    },
+    {
+      "id": 38859,
+      "path": "simple/articles/c/o/m/Category~Computer_science_ea63.html",
+      "title": "Category:Computer science - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.139215811512745
+    },
+    {
+      "id": 36470,
+      "path": "simple/articles/c/h/e/Checksum.html",
+      "title": "Checksum - Simple English Wikipedia, the free encyclopedia",
+      "score": 9.081188193330174
+    },
+    {
+      "id": 38821,
+      "path": "simple/articles/c/o/m/Computation.html",
+      "title": "Computation - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.995859535004346
+    },
+    {
+      "id": 55123,
+      "path": "simple/articles/g/r/a/Graph_theory.html",
+      "title": "Graph theory - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.978427062833696
+    },
+    {
+      "id": 89293,
+      "path": "simple/articles/r/u/b/Talk~Rubik's_Cube_1215.html",
+      "title": "Talk:Rubik's Cube - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.953867391228066
+    },
+    {
+      "id": 42906,
+      "path": "simple/articles/d/a/t/Data_mining.html",
+      "title": "Data mining - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.871192539979704
+    },
+    {
+      "id": 42869,
+      "path": "simple/articles/d/a/t/Data_structure.html",
+      "title": "Data structure - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.691314492832936
+    },
+    {
+      "id": 47872,
+      "path": "simple/articles/e/r/r/Error.html",
+      "title": "Error - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.691314492832936
+    },
+    {
+      "id": 48973,
+      "path": "simple/articles/f/a/m/Fame.html",
+      "title": "Fame - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.691314492832936
+    },
+    {
+      "id": 86085,
+      "path": "simple/articles/q/u/a/Quantum_computation.html",
+      "title": "Quantum computation - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.633168309684084
+    },
+    {
+      "id": 43277,
+      "path": "simple/articles/d/e/c/Template~Dec_to_frac_doc_7166.html",
+      "title": "Template:Dec to frac/doc - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.55699401233342
+    },
+    {
+      "id": 43324,
+      "path": "simple/articles/d/e/c/Template~Dec_to_frac_9b57.html",
+      "title": "Template:Dec to frac - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.55699401233342
+    },
+    {
+      "id": 60349,
+      "path": "simple/articles/i/n/f/Infix_notation.html",
+      "title": "Infix notation - Simple English Wikipedia, the free encyclopedia",
+      "score": 8.463887784289302
+    }
+  ],
+  "total_results": 92,
+  "time_taken_ms": 1.963406
+}
