@@ -4,8 +4,6 @@ use std::io::{self, BufRead};
 use std::path::Path;
 use regex::Regex;
 
-mod stemmer;
-
 pub struct Linguist {
     lemmatizer: HashMap<String, String>,
     stopwords: HashSet<String>,
@@ -31,22 +29,25 @@ impl Linguist {
         Ok(())
     }
 
-    pub fn load_lemmatization_file<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()> {
-        let file = File::open(path)?;
-        let reader = io::BufReader::new(file);
+pub fn load_lemmatization_file<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()> {
+    let file = File::open(path)?;
+    let reader = io::BufReader::new(file);
 
-        for line in reader.lines() {
-            let line = line?;
-            let parts: Vec<&str> = line.split_whitespace().collect();
-            if parts.len() >= 2 {
-                let word = parts[0].to_string();
-                let lemma = parts[1].to_string();
-                // Map the inflected word to its lemma
-                self.lemmatizer.insert(word, lemma);
-            }
+    for line in reader.lines() {
+        let line = line?;
+        let parts: Vec<&str> = line.split_whitespace().collect();
+        if parts.len() >= 2 {
+            // Column 0 is the Target (Lemma)
+            // Column 1 is the Source (Inflected form)
+            let lemma = parts[0].to_string();
+            let inflected = parts[1].to_string();
+            
+            // Map the inflected word to its lemma
+            self.lemmatizer.insert(inflected, lemma);
         }
-        Ok(())
     }
+    Ok(())
+}
 
     pub fn process(&self, text: &str) -> Vec<String> {
         // 1. Casefolding
@@ -68,14 +69,8 @@ impl Linguist {
                 // If the token exists in our map, replace it with the lemma.
                 // Otherwise, keep the original token.
                 let lemma = self.lemmatizer.get(token).map_or(token, |v| v);
-
-                // 5. Stemming
-                let stemmed = match stemmer::get(lemma) {
-                    Ok(s) => s,
-                    Err(_) => lemma.to_string(),
-                };
                 
-                Some(stemmed)
+                Some(lemma.to_string())
             })
             .collect()
     }

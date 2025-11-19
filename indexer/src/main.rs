@@ -41,8 +41,8 @@ fn main() -> Result<()> {
         .context("Failed to load lemmatization file")?;
 
     // 2. Load crawled file list
-    // let crawled_path = "wikipedia-simple-html-dump/html.lst";
-    let crawled_path = "data/crawled.lst";
+    let crawled_path = "wikipedia-simple-html-dump/html.lst";
+    // let crawled_path = "data/crawled.lst";
 
     let file = File::open(crawled_path).context("Failed to open crawled.lst")?;
     let reader = BufReader::new(file);

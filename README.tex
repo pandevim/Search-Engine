@@ -83,8 +83,7 @@ This project is a search engine built in Rust, designed to index and search a lo
 ├── linguist/
 │   ├── Cargo.toml
 │   └── src/
-│       ├── lib.rs
-│       └── stemmer.rs
+│       └── lib.rs
 ├── search/
 │   ├── Cargo.toml
 │   └── src/
@@ -132,7 +131,7 @@ The \texttt{linguist} component is a text processing library responsible for pre
     \item \textbf{Casefolding}: Converts all text to lowercase to ensure case-insensitive matching.
     \item \textbf{Tokenization}: Splits text into individual tokens (words) based on punctuation and whitespace.
     \item \textbf{Stopword Removal}: Filters out common English filler words (e.g., "the", "is", "at") to reduce index size and improve relevance. Uses \texttt{data/stopwords-en.txt} (\href{https://github.com/stopwords-iso/stopwords-en}{Source}).
-    \item \textbf{Stemming/Lemmatization}: Reduces words to their root form (e.g., "running" $\rightarrow$ "run") using a dictionary-based approach sourced from \texttt{data/lemmatization-en.txt} (\href{https://github.com/michmech/lemmatization-lists}{Source}).
+    \item \textbf{Lemmatization}: Reduces words to their root form (e.g., "running" $\rightarrow$ "run") using a dictionary-based approach sourced from \texttt{data/lemmatization-en.txt} (\href{https://github.com/michmech/lemmatization-lists}{Source}).
 \end{enumerate}
 
 \subsection{Indexer}
@@ -286,7 +285,7 @@ npm run dev
 The client will be available at \texttt{http://localhost:5173}. Clicking on search results will open the local Wikipedia pages directly in your browser.
 
 \subsection{Running Tests}
-To run the unit tests for the Linguist library (stemmer, tokenizer, etc.):
+To run the unit tests for the Linguist library (lemmatization, tokenizer, etc.):
 
 \begin{verbatim}
 cargo test --manifest-path linguist/Cargo.toml
@@ -310,7 +309,6 @@ This will create a `fixtures/` directory populated with input (`.txt`) and outpu
 The data used for this search engine is sourced from the Wikimedia Dumps, specifically the Simple English Wikipedia Database dump, which can be found at \href{https://dumps.wikimedia.org/}{dumps.wikimedia.org}.
 The lemmatization list is sourced from \href{https://github.com/michmech/lemmatization-lists}{michmech/lemmatization-lists}.
 The stopwords list is sourced from \href{https://github.com/stopwords-iso/stopwords-en}{stopwords-iso/stopwords-en}.
-The stemming algorithm implementation is adapted from \href{https://github.com/minhnhdo/rust-stem}{rust-stem}.
 
 \newpage
 
