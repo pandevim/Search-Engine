@@ -19,6 +19,11 @@
   let loading = false;
   let error: string | null = null;
 
+  $: if (!query.trim()) {
+    response = null;
+    error = null;
+  }
+
   async function handleSearch() {
     if (!query.trim()) return;
 
