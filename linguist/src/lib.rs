@@ -39,8 +39,8 @@ impl Linguist {
             let line = line?;
             let parts: Vec<&str> = line.split_whitespace().collect();
             if parts.len() >= 2 {
-                let lemma = parts[0].to_string();
-                let word = parts[1].to_string();
+                let word = parts[0].to_string();
+                let lemma = parts[1].to_string();
                 // Map the inflected word to its lemma
                 self.lemmatizer.insert(word, lemma);
             }
