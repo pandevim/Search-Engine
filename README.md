@@ -198,13 +198,23 @@ cargo run --manifest-path server/Cargo.toml
 
 To start the web interface. Ensure you have Node.js installed.
 
-```bash
-cd client
-npm install
-npm run dev
-```
+**Important:** The client requires a symbolic link to the Wikipedia dump to serve the files locally.
 
-The client will be available at `http://localhost:5173`.
+1.  Create the symbolic link (if not already created):
+
+    ```bash
+    # Run from the project root
+    ln -s "../../wikipedia-simple-html-dump" "client/static/wiki"
+    ```
+
+2.  Install dependencies and run the development server:
+    ```bash
+    cd client
+    npm install
+    npm run dev
+    ```
+
+The client will be available at `http://localhost:5173`. Clicking on search results will open the local Wikipedia pages directly in your browser.
 
 ### Running Tests
 

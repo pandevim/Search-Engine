@@ -79,7 +79,7 @@
     <ul class="results-list">
       {#each response.results as result}
         <li class="result-item">
-          <a href={`file:///${result.path}`} target="_blank" rel="noopener noreferrer">
+          <a href={`/wiki/${result.path}`} target="_blank" rel="noopener noreferrer">
             <span class="path">{result.path}</span>
           </a>
         </li>

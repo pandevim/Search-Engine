@@ -21,3 +21,4 @@ yarn-error.log*
 # Data
 wikipedia-simple-html-dump/
 data/crawled.lst
+client/static/wiki
