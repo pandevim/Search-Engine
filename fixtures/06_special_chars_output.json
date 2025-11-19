@@ -1,6 +1,307 @@
 {
   "query": "c++",
-  "results": [],
-  "total_results": 0,
-  "time_taken_ms": 1.537771
+  "results": [
+    {
+      "id": 68148,
+      "path": "simple/articles/l/i/s/List_of_rivers_of_Romania_(Cabii_-_Cheagu)_587f.html",
+      "title": "List of rivers of Romania (Cabii - Cheagu) - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6932753932039333
+    },
+    {
+      "id": 47423,
+      "path": "simple/articles/e/n/g/Category~English_football_clubs_2261.html",
+      "title": "Category:English football clubs - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6923909029602222
+    },
+    {
+      "id": 91301,
+      "path": "simple/articles/s/c/o/Scottish_Football_League_3007.html",
+      "title": "Scottish Football League - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6892926955095109
+    },
+    {
+      "id": 106818,
+      "path": "simple/articles/w/e/r/User~Werdan7_results_1b18.html",
+      "title": "User:Werdan7/results - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.685840717062353
+    },
+    {
+      "id": 68157,
+      "path": "simple/articles/l/i/s/List_of_English_football_teams_2005_06_season_d5ff.html",
+      "title": "List of English football teams 2005/06 season - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6856289605689097
+    },
+    {
+      "id": 68440,
+      "path": "simple/articles/l/i/s/List_of_elements_by_symbol.html",
+      "title": "List of elements by symbol - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6832244462085177
+    },
+    {
+      "id": 106736,
+      "path": "simple/articles/w/e/l/Welsh_League_3704.html",
+      "title": "Welsh League - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6748135074111707
+    },
+    {
+      "id": 32446,
+      "path": "simple/articles/b/o/t/Wikipedia~Bots_fd71.html",
+      "title": "Wikipedia:Bots - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6734230689973182
+    },
+    {
+      "id": 43210,
+      "path": "simple/articles/d/e/a/User~Deathgleaner_newspaper_802b.html",
+      "title": "User:Deathgleaner/newspaper - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.669643802884016
+    },
+    {
+      "id": 24633,
+      "path": "simple/articles/a/l/e/User~Alexbonaro_0840.html",
+      "title": "User:Alexbonaro - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6691808287511969
+    },
+    {
+      "id": 106815,
+      "path": "simple/articles/w/e/r/User~Werdan7_results_codes_2e3b.html",
+      "title": "User:Werdan7/results/codes - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6655967897440833
+    },
+    {
+      "id": 31820,
+      "path": "simple/articles/b/l/u/Blues.html",
+      "title": "Blues - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6651250374495352
+    },
+    {
+      "id": 52929,
+      "path": "simple/articles/g/a/r/Gary_Megson_b190.html",
+      "title": "Gary Megson - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6646633187708757
+    },
+    {
+      "id": 98787,
+      "path": "simple/articles/t/h/e/User~The_Rambling_Man_pages_0883.html",
+      "title": "User:The Rambling Man/pages - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6634942280423677
+    },
+    {
+      "id": 73822,
+      "path": "simple/articles/m/i/d/Middle_C_d654.html",
+      "title": "Middle C - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6593701986177871
+    },
+    {
+      "id": 42270,
+      "path": "simple/articles/c/y/c/Cycloalkane.html",
+      "title": "Cycloalkane - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6590646674465108
+    },
+    {
+      "id": 74325,
+      "path": "simple/articles/m/i/s/User~Misza13_monobook.js_8863.html",
+      "title": "User:Misza13/monobook.js - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6581768726981336
+    },
+    {
+      "id": 57388,
+      "path": "simple/articles/h/e/p/Hepatitis_C_5b11.html",
+      "title": "Hepatitis C - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6580185908386018
+    },
+    {
+      "id": 91332,
+      "path": "simple/articles/s/c/o/Scottish_Premier_League_9d41.html",
+      "title": "Scottish Premier League - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6576255857055378
+    },
+    {
+      "id": 34056,
+      "path": "simple/articles/c/_/s/C_sharp.html",
+      "title": "C sharp - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6559812334303072
+    },
+    {
+      "id": 87407,
+      "path": "simple/articles/r/e/l/Relative_key.html",
+      "title": "Relative key - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.654762654573477
+    },
+    {
+      "id": 68344,
+      "path": "simple/articles/l/i/s/List_of_asteroids_101\u2013200_98d6.html",
+      "title": "List of asteroids/101\u2013200 - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6544892217515423
+    },
+    {
+      "id": 90326,
+      "path": "simple/articles/s/a/m/Sam_Allardyce_2d1d.html",
+      "title": "Sam Allardyce - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.654211623400408
+    },
+    {
+      "id": 68146,
+      "path": "simple/articles/l/i/s/List_of_Italian_football_teams_e89f.html",
+      "title": "List of Italian football teams - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6539511842929033
+    },
+    {
+      "id": 60822,
+      "path": "simple/articles/i/n/t/Interval_(music).html",
+      "title": "Interval (music) - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6539245208814386
+    },
+    {
+      "id": 107337,
+      "path": "simple/articles/w/i/k/User~WikiLeon_monobook.js_b75b.html",
+      "title": "User:WikiLeon/monobook.js - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6533833460909284
+    },
+    {
+      "id": 34043,
+      "path": "simple/articles/c/-/r/Category~C-rock_2e2b.html",
+      "title": "Category:C-rock - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6530841514878873
+    },
+    {
+      "id": 34036,
+      "path": "simple/articles/c/-/p/Category~C-pop_e21f.html",
+      "title": "Category:C-pop - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6514643309614798
+    },
+    {
+      "id": 48036,
+      "path": "simple/articles/e/s/s/User~Essjay_godmode.js_d71d.html",
+      "title": "User:Essjay/godmode.js - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6508737347701397
+    },
+    {
+      "id": 70615,
+      "path": "simple/articles/m/a/j/User~Majorly_godmode.js_e453.html",
+      "title": "User:Majorly/godmode.js - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6508737347701397
+    },
+    {
+      "id": 24826,
+      "path": "simple/articles/a/l/k/Alkene.html",
+      "title": "Alkene - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6499891132167726
+    },
+    {
+      "id": 68633,
+      "path": "simple/articles/l/i/s/List_of_comets.html",
+      "title": "List of comets - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.646668016990238
+    },
+    {
+      "id": 44568,
+      "path": "simple/articles/d/i/v/Division_by_zero.html",
+      "title": "Division by zero - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6459722032588613
+    },
+    {
+      "id": 39910,
+      "path": "simple/articles/c/o/u/Template~Country_data_Washington,_D.C._c389.html",
+      "title": "Template:Country data Washington, D.C. - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6452446489613475
+    },
+    {
+      "id": 105539,
+      "path": "simple/articles/v/o/x/User~Vox_Rationis_monobook.js_a932.html",
+      "title": "User:Vox Rationis/monobook.js - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6441356003273446
+    },
+    {
+      "id": 76036,
+      "path": "simple/articles/m/u/s/Category~Music_in_China_8d07.html",
+      "title": "Category:Music in China - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6436639950867398
+    },
+    {
+      "id": 35168,
+      "path": "simple/articles/c/a/s/User_talk~Casey_54f5.html",
+      "title": "User talk:Casey - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6429087248727803
+    },
+    {
+      "id": 68376,
+      "path": "simple/articles/l/i/s/List_of_kings_of_Carthage_d962.html",
+      "title": "List of kings of Carthage - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.642464726481214
+    },
+    {
+      "id": 94128,
+      "path": "simple/articles/s/o/l/Solvent.html",
+      "title": "Solvent - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6416854518470259
+    },
+    {
+      "id": 34029,
+      "path": "simple/articles/c/+/+/C++.html",
+      "title": "C++ - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6415153633585473
+    },
+    {
+      "id": 42293,
+      "path": "simple/articles/c/y/m/Cymbospondylus.html",
+      "title": "Cymbospondylus - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6413707006526195
+    },
+    {
+      "id": 59145,
+      "path": "simple/articles/h/y/d/Template~Hydrocarbons_874f.html",
+      "title": "Template:Hydrocarbons - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6409777437953834
+    },
+    {
+      "id": 105327,
+      "path": "simple/articles/v/i/t/Vitamin_C_bba2.html",
+      "title": "Vitamin C - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6405307604761874
+    },
+    {
+      "id": 34051,
+      "path": "simple/articles/c/_/_/C.html",
+      "title": "C - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6393774314523244
+    },
+    {
+      "id": 32282,
+      "path": "simple/articles/b/o/o/Category~Books_by_C._S._Lewis_4ff4.html",
+      "title": "Category:Books by C. S. Lewis - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6387668897479104
+    },
+    {
+      "id": 42420,
+      "path": "simple/articles/c/\u00fa/c/C\u00facuta.html",
+      "title": "C\u00facuta - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6386168531916063
+    },
+    {
+      "id": 34343,
+      "path": "simple/articles/c/a/m/Camarasaurus.html",
+      "title": "Camarasaurus - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6362253392663368
+    },
+    {
+      "id": 48324,
+      "path": "simple/articles/e/u/r/Euripides.html",
+      "title": "Euripides - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6344744345735043
+    },
+    {
+      "id": 24823,
+      "path": "simple/articles/a/l/k/Alkane.html",
+      "title": "Alkane - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.6338901841286262
+    },
+    {
+      "id": 4164,
+      "path": "simple/articles/1/6/9/1690s_BC_ce60.html",
+      "title": "1690s BC - Simple English Wikipedia, the free encyclopedia",
+      "score": 1.633710031128574
+    }
+  ],
+  "total_results": 79433,
+  "time_taken_ms": 91.087692
 }
