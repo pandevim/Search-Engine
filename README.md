@@ -91,27 +91,45 @@ The indexer builds an efficient inverted index from the processed documents.
 
 Following the standard inverted index design:
 
-1.  **Inverted Index (Occurrence Lists)**: A binary file (`data/inverted_index.bin`) storing the list of document IDs for each term. These lists are sorted by Document ID to allow for efficient intersection algorithms (like sorted sequence merging).
-2.  **Compressed Trie**: An in-memory compressed trie (implemented using `trie-rs`) that maps every term in the vocabulary to the index of its occurrence list in the binary file. The trie is serialized to `data/trie.bin`.
+1.  **Inverted Index (Occurrence Lists)**: A binary file (`data/inverted_index.bin`) storing the list of postings for each term. Each posting contains the Document ID and the list of positions where the term appears (for window scoring).
+2.  **Document Metadata**: A binary file (`data/docs.bin`) storing metadata for each document, including its path, title, and length (for BM25 scoring).
+3.  **Compressed Trie**: An in-memory compressed trie (implemented using `trie-rs`) that maps every term in the vocabulary to the index of its occurrence list in the binary file. The trie is serialized to `data/trie.bin`.
 
 #### Process
 
 1.  **Initialization**: Loads the `crawled.lst` to map Document IDs (line numbers) to file paths.
-2.  **Processing**: Iterates through every document, parses the HTML to extract text, and uses the `Linguist` library to tokenize and stem the content.
-3.  **Index Construction**: Builds a temporary in-memory map of `Term -> [DocID]`.
-4.  **Optimization**: Sorts and deduplicates document IDs within each list.
-5.  **Serialization**: Saves the occurrence lists and the Trie to disk using `bincode` for compact binary storage.
+2.  **Processing**: Iterates through every document, parses the HTML to extract text and title, and uses the `Linguist` library to tokenize and stem the content.
+3.  **Index Construction**: Builds a temporary in-memory map of `Term -> DocID -> [Positions]`.
+4.  **Optimization**: Sorts postings by Document ID.
+5.  **Serialization**: Saves the occurrence lists, document metadata, and the Trie to disk using `bincode`.
 
-### 4. Search
+### 4. Search & Ranking
 
-The search component provides the user interface for querying the index.
+The search component provides the user interface for querying the index and ranking results.
+
+#### Ranking Algorithm
+
+The search engine uses a sophisticated ranking function that combines two relevance signals:
+
+1.  **BM25 Score**: A probabilistic information retrieval model that ranks documents based on the query terms appearing in each document, regardless of their proximity within the document. It accounts for:
+
+    - **Term Frequency (TF)**: How often the term appears in the document.
+    - **Inverse Document Frequency (IDF)**: How rare the term is across the entire corpus.
+    - **Document Length**: Penalizes very long documents (which might contain terms just by chance).
+
+2.  **Window Score**: Measures the proximity of query terms within the document.
+    - It calculates the smallest window (span of words) that contains all query terms.
+    - Documents where terms appear closer together receive a higher score.
+
+**Final Score Formula**:
+$$ Score(D, Q) = \alpha \cdot Window(D, Q) + \beta \cdot BM25(D, Q) $$
 
 #### Features
 
 - **Interactive CLI**: A command-line loop that accepts user queries.
-- **Boolean AND Search**: Supports multi-word queries by finding the intersection of documents containing all terms (e.g., "computer science" finds docs with both "computer" AND "science").
-- **Fast Retrieval**: Uses the compressed Trie for O(L) lookups (where L is word length) and efficient sorted list intersection.
-- **Result Display**: Shows the top 10 matching document paths and the total count of results.
+- **Boolean AND Search**: Supports multi-word queries by finding the intersection of documents containing all terms.
+- **Ranked Results**: Returns results sorted by relevance score.
+- **Result Display**: Shows the top 10 matching document paths, titles, and scores.
 
 ### 5. Server (REST API)
 

@@ -8,22 +8,31 @@ use std::io::BufReader;
 use std::time::Instant;
 use trie_rs::map::Trie;
 
+#[derive(Deserialize, Debug)]
+struct Posting {
+    doc_id: u32,
+    positions: Vec<u32>,
+}
+
 #[derive(Deserialize)]
 struct IndexData {
-    occurrence_lists: Vec<Vec<u32>>,
+    occurrence_lists: Vec<Vec<Posting>>,
+    avgdl: f64,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 struct DocumentMetadata {
     path: String,
     title: String,
+    len: u32,
 }
 
 struct AppState {
     linguist: Linguist,
     trie: Trie<u8, u32>,
-    occurrence_lists: Vec<Vec<u32>>,
+    occurrence_lists: Vec<Vec<Posting>>,
     documents: Vec<DocumentMetadata>,
+    avgdl: f64,
 }
 
 #[derive(Deserialize)]
@@ -36,6 +45,7 @@ struct SearchResult {
     id: u32,
     path: String,
     title: String,
+    score: f64,
 }
 
 #[derive(Serialize)]
@@ -63,68 +73,169 @@ async fn search_handler(
         });
     }
 
-    let result_ids = search(q, &data.linguist, &data.trie, &data.occurrence_lists);
+    let results = search(q, &data);
     let duration = start.elapsed();
-
-    let results: Vec<SearchResult> = result_ids
-        .iter()
-        .take(50) // Limit to top 50 for API
-        .filter_map(|&id| {
-            data.documents.get(id as usize).map(|doc| SearchResult {
-                id,
-                path: doc.path.clone(),
-                title: doc.title.clone(),
-            })
-        })
-        .collect();
 
     HttpResponse::Ok().json(SearchResponse {
         query: q.to_string(),
         results,
-        total_results: result_ids.len(),
+        total_results: 0, // We'll update this logic
         time_taken_ms: duration.as_secs_f64() * 1000.0,
     })
 }
 
-fn search(
-    query: &str,
-    linguist: &Linguist,
-    trie: &Trie<u8, u32>,
-    occurrence_lists: &Vec<Vec<u32>>,
-) -> Vec<u32> {
-    let tokens = linguist.process(query);
+fn search(query: &str, data: &AppState) -> Vec<SearchResult> {
+    let tokens = data.linguist.process(query);
     if tokens.is_empty() {
         return Vec::new();
     }
 
-    let mut result_sets: Vec<&Vec<u32>> = Vec::new();
-
-    for token in tokens {
-        if let Some(list_index) = trie.exact_match(token) {
-            if let Some(list) = occurrence_lists.get(*list_index as usize) {
-                result_sets.push(list);
+    // 1. Retrieve postings lists for all query terms
+    let mut query_postings: Vec<&Vec<Posting>> = Vec::new();
+    for token in &tokens {
+        if let Some(list_index) = data.trie.exact_match(token) {
+            if let Some(list) = data.occurrence_lists.get(*list_index as usize) {
+                query_postings.push(list);
             } else {
-                return Vec::new();
+                return Vec::new(); // Term found in trie but not in list? Should not happen.
             }
         } else {
+            return Vec::new(); // Term not found, AND logic implies 0 results
+        }
+    }
+
+    if query_postings.is_empty() {
+        return Vec::new();
+    }
+
+    // 2. Find intersection of DocIDs
+    // We start with the DocIDs of the first term
+    let mut common_doc_ids: Vec<u32> = query_postings[0].iter().map(|p| p.doc_id).collect();
+
+    for other_list in query_postings.iter().skip(1) {
+        let other_ids: Vec<u32> = other_list.iter().map(|p| p.doc_id).collect();
+        common_doc_ids = intersect_sorted(&common_doc_ids, &other_ids);
+        if common_doc_ids.is_empty() {
             return Vec::new();
         }
     }
 
-    if result_sets.is_empty() {
-        return Vec::new();
+    // 3. Rank the documents
+    let mut scored_results: Vec<SearchResult> = Vec::new();
+    let n = data.documents.len() as f64;
+    let avgdl = data.avgdl;
+
+    // BM25 Constants
+    let k1 = 1.2;
+    let b = 0.75;
+
+    for doc_id in common_doc_ids {
+        let doc_idx = doc_id as usize;
+        if let Some(doc_meta) = data.documents.get(doc_idx) {
+            let doc_len = doc_meta.len as f64;
+            
+            let mut bm25_score = 0.0;
+            let mut term_positions: Vec<Vec<u32>> = Vec::new();
+
+            for (i, _) in tokens.iter().enumerate() {
+                // Find the posting for this term and doc_id
+                // Since we know doc_id is in the list, we can find it.
+                // Optimization: We could have collected these during intersection, but binary search is fast enough.
+                let posting_list = query_postings[i];
+                if let Ok(idx) = posting_list.binary_search_by_key(&doc_id, |p| p.doc_id) {
+                    let posting = &posting_list[idx];
+                    let tf = posting.positions.len() as f64;
+                    
+                    // IDF
+                    // n(qi) is the number of docs containing the term
+                    let n_qi = posting_list.len() as f64;
+                    let idf = ((n - n_qi + 0.5) / (n_qi + 0.5) + 1.0).ln();
+
+                    // BM25 Term Score
+                    let numerator = tf * (k1 + 1.0);
+                    let denominator = tf + k1 * (1.0 - b + b * (doc_len / avgdl));
+                    bm25_score += idf * (numerator / denominator);
+
+                    term_positions.push(posting.positions.clone());
+                }
+            }
+
+            // Window Score
+            let min_window = calculate_min_window(&term_positions);
+            let window_score = if min_window > 0 {
+                tokens.len() as f64 / min_window as f64
+            } else {
+                0.0
+            };
+
+            // Final Score
+            // Weights can be adjusted.
+            let alpha = 1.0;
+            let beta = 1.0;
+            let final_score = alpha * window_score + beta * bm25_score;
+
+            scored_results.push(SearchResult {
+                id: doc_id,
+                path: doc_meta.path.clone(),
+                title: doc_meta.title.clone(),
+                score: final_score,
+            });
+        }
     }
 
-    let mut intersection = result_sets[0].clone();
+    // Sort by score descending
+    scored_results.sort_by(|a, b| b.score.partial_cmp(&a.score).unwrap_or(std::cmp::Ordering::Equal));
 
-    for other_list in result_sets.iter().skip(1) {
-        intersection = intersect_sorted(&intersection, other_list);
-        if intersection.is_empty() {
+    scored_results
+}
+
+fn calculate_min_window(term_positions: &Vec<Vec<u32>>) -> u32 {
+    if term_positions.is_empty() {
+        return 0;
+    }
+    
+    // We need to find the smallest range [min, max] that contains at least one position from each list.
+    // This is equivalent to finding the smallest range in K sorted lists.
+    
+    // Current indices in each list
+    let mut indices = vec![0; term_positions.len()];
+    let mut min_window = u32::MAX;
+
+    loop {
+        let mut current_min = u32::MAX;
+        let mut current_max = 0;
+        let mut min_list_idx = 0;
+
+        // Find the current range covered by the pointers
+        for (i, list) in term_positions.iter().enumerate() {
+            if indices[i] >= list.len() {
+                return if min_window == u32::MAX { 0 } else { min_window };
+            }
+            let pos = list[indices[i]];
+            if pos < current_min {
+                current_min = pos;
+                min_list_idx = i;
+            }
+            if pos > current_max {
+                current_max = pos;
+            }
+        }
+
+        let window_size = current_max - current_min + 1;
+        if window_size < min_window {
+            min_window = window_size;
+        }
+
+        // Advance the pointer of the list that had the minimum value
+        indices[min_list_idx] += 1;
+        
+        // If any list is exhausted, we can't find any more valid windows containing all terms
+        if indices[min_list_idx] >= term_positions[min_list_idx].len() {
             break;
         }
     }
 
-    intersection
+    if min_window == u32::MAX { 0 } else { min_window }
 }
 
 fn intersect_sorted(a: &[u32], b: &[u32]) -> Vec<u32> {
@@ -182,6 +293,7 @@ async fn main() -> Result<()> {
         trie,
         occurrence_lists: index_data.occurrence_lists,
         documents,
+        avgdl: index_data.avgdl,
     });
 
     println!("Starting server at http://127.0.0.1:8080");
