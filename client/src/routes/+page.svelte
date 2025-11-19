@@ -4,6 +4,7 @@
   interface SearchResult {
     id: number;
     path: string;
+    title: string;
   }
 
   interface SearchResponse {
@@ -80,6 +81,7 @@
       {#each response.results as result}
         <li class="result-item">
           <a href={`/wiki/${result.path}`} target="_blank" rel="noopener noreferrer">
+            <div class="title">{result.title}</div>
             <span class="path">{result.path}</span>
           </a>
         </li>
@@ -164,19 +166,26 @@
 
   .result-item a {
     text-decoration: none;
-    color: #2980b9;
-    font-weight: 500;
+    color: inherit;
     display: block;
   }
 
-  .result-item a:hover {
+  .result-item a:hover .title {
     text-decoration: underline;
+  }
+
+  .title {
+    color: #2980b9;
+    font-weight: 500;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
   }
 
   .path {
     font-family: monospace;
     color: #27ae60;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    display: block;
   }
 
   .error {

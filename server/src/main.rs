@@ -13,11 +13,17 @@ struct IndexData {
     occurrence_lists: Vec<Vec<u32>>,
 }
 
+#[derive(Serialize, Deserialize, Clone)]
+struct DocumentMetadata {
+    path: String,
+    title: String,
+}
+
 struct AppState {
     linguist: Linguist,
     trie: Trie<u8, u32>,
     occurrence_lists: Vec<Vec<u32>>,
-    doc_paths: Vec<String>,
+    documents: Vec<DocumentMetadata>,
 }
 
 #[derive(Deserialize)]
@@ -29,6 +35,7 @@ struct SearchQuery {
 struct SearchResult {
     id: u32,
     path: String,
+    title: String,
 }
 
 #[derive(Serialize)]
@@ -63,9 +70,10 @@ async fn search_handler(
         .iter()
         .take(50) // Limit to top 50 for API
         .filter_map(|&id| {
-            data.doc_paths.get(id as usize).map(|path| SearchResult {
+            data.documents.get(id as usize).map(|doc| SearchResult {
                 id,
-                path: path.clone(),
+                path: doc.path.clone(),
+                title: doc.title.clone(),
             })
         })
         .collect();
@@ -163,19 +171,17 @@ async fn main() -> Result<()> {
     let reader = BufReader::new(index_file);
     let index_data: IndexData = bincode::deserialize_from(reader).context("Failed to deserialize index")?;
 
-    let crawled_path = "data/crawled.lst";
-    let file = File::open(crawled_path).context("Failed to open crawled.lst")?;
-    let reader = BufReader::new(file);
-    let doc_paths: Vec<String> = std::io::BufRead::lines(reader)
-        .collect::<Result<_, _>>()?;
+    let docs_file = File::open("data/docs.bin").context("Failed to open docs.bin")?;
+    let reader = BufReader::new(docs_file);
+    let documents: Vec<DocumentMetadata> = bincode::deserialize_from(reader).context("Failed to deserialize docs")?;
 
-    println!("Index loaded. {} documents available.", doc_paths.len());
+    println!("Index loaded. {} documents available.", documents.len());
 
     let app_state = web::Data::new(AppState {
         linguist,
         trie,
         occurrence_lists: index_data.occurrence_lists,
-        doc_paths,
+        documents,
     });
 
     println!("Starting server at http://127.0.0.1:8080");

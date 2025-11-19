@@ -15,6 +15,12 @@ struct IndexData {
     occurrence_lists: Vec<Vec<u32>>,
 }
 
+#[derive(Serialize, Deserialize)]
+struct DocumentMetadata {
+    path: String,
+    title: String,
+}
+
 fn main() -> Result<()> {
     println!("Initializing Indexer...");
 
@@ -39,8 +45,10 @@ fn main() -> Result<()> {
     // 3. Build Inverted Index in Memory
     // Term -> List of DocIDs
     let mut temp_index: HashMap<String, Vec<u32>> = HashMap::new();
+    let mut documents: Vec<DocumentMetadata> = Vec::with_capacity(doc_paths.len());
 
     let selector = Selector::parse("body").unwrap();
+    let title_selector = Selector::parse("title").unwrap();
 
     for (doc_id, rel_path) in doc_paths.iter().enumerate() {
         let doc_id = doc_id as u32;
@@ -54,6 +62,17 @@ fn main() -> Result<()> {
         if let Ok(html_content) = content {
             let document = Html::parse_document(&html_content);
             
+            let title = document
+                .select(&title_selector)
+                .next()
+                .map(|element| element.text().collect::<Vec<_>>().join(" "))
+                .unwrap_or_else(|| "Untitled".to_string());
+
+            documents.push(DocumentMetadata {
+                path: rel_path.clone(),
+                title,
+            });
+
             // Extract text from body
             // We join all text nodes with spaces
             let text_content = document
@@ -72,6 +91,10 @@ fn main() -> Result<()> {
             }
         } else {
             eprintln!("Warning: Could not read file {:?}", full_path);
+            documents.push(DocumentMetadata {
+                path: rel_path.clone(),
+                title: "Error reading file".to_string(),
+            });
         }
     }
 
@@ -103,6 +126,11 @@ fn main() -> Result<()> {
 
     // 5. Save to disk
     println!("Saving index to disk...");
+    
+    // Save Document Metadata
+    let docs_file = File::create("data/docs.bin")?;
+    let mut writer = BufWriter::new(docs_file);
+    bincode::serialize_into(&mut writer, &documents)?;
     
     // Save Occurrence Lists
     let index_data = IndexData { occurrence_lists };
