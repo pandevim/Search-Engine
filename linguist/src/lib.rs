@@ -7,6 +7,8 @@ use regex::Regex;
 pub struct Linguist {
     lemmatizer: HashMap<String, String>,
     stopwords: HashSet<String>,
+    whitelist: HashSet<String>,
+    token_splitter: Regex,
 }
 
 impl Linguist {
@@ -14,7 +16,21 @@ impl Linguist {
         Linguist {
             lemmatizer: HashMap::new(),
             stopwords: HashSet::new(),
+            whitelist: HashSet::new(),
+            token_splitter: Regex::new(r"[^a-z0-9]+").unwrap(),
         }
+    }
+
+    pub fn load_whitelist<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()> {
+        let file = File::open(path)?;
+        let reader = io::BufReader::new(file);
+        for line in reader.lines() {
+            let word = line?.trim().to_string();
+            if !word.is_empty() {
+                self.whitelist.insert(word.to_lowercase());
+            }
+        }
+        Ok(())
     }
 
     pub fn load_stopwords<P: AsRef<Path>>(&mut self, path: P) -> io::Result<()> {
@@ -51,29 +67,60 @@ pub fn load_lemmatization_file<P: AsRef<Path>>(&mut self, path: P) -> io::Result
 }
 
     pub fn process(&self, text: &str) -> Vec<String> {
-        // 1. Casefolding
         let lowercased = text.to_lowercase();
+        let mut tokens = Vec::new();
 
-        // 2. Tokenization (split by non-alphanumeric characters)
-        let re = Regex::new(r"[^a-z0-9]+").unwrap();
-        let tokens: Vec<&str> = re.split(&lowercased).collect();
+        for raw_token in lowercased.split_whitespace() {
+            if let Some(whitelisted) = self.find_whitelisted_token(raw_token) {
+                tokens.push(whitelisted);
+            } else {
+                // Fallback: standard tokenization
+                tokens.extend(
+                    self.token_splitter
+                        .split(raw_token)
+                        .filter(|s| !s.is_empty())
+                        .map(String::from)
+                );
+            }
+        }
 
-        tokens.into_iter()
-            .filter(|t| !t.is_empty())
-            .filter_map(|token| {
-                // 3. Stopword Removal
-                if self.stopwords.contains(token) {
-                    return None;
-                }
-
-                // 4. Lemmatization
-                // If the token exists in our map, replace it with the lemma.
-                // Otherwise, keep the original token.
-                let lemma = self.lemmatizer.get(token).map_or(token, |v| v);
-                
-                Some(lemma.to_string())
-            })
+        // Filter stopwords and apply lemmatization
+        tokens
+            .into_iter()
+            .filter(|t| !self.stopwords.contains(t))
+            .map(|token| self.lemmatizer.get(&token).cloned().unwrap_or(token))
             .collect()
+    }
+
+    fn find_whitelisted_token(&self, token: &str) -> Option<String> {
+        // Start with the most conservative trim (keep +, #, .)
+        let base = token.trim_matches(|c: char| !c.is_alphanumeric() && c != '+' && c != '#' && c != '.');
+        
+        if base.is_empty() {
+            return None;
+        }
+
+        // Try progressively more aggressive trimming
+        if self.whitelist.contains(base) {
+            return Some(base.to_string());
+        }
+        
+        let no_trailing = base.trim_end_matches('.');
+        if !no_trailing.is_empty() && self.whitelist.contains(no_trailing) {
+            return Some(no_trailing.to_string());
+        }
+        
+        let no_leading = base.trim_start_matches('.');
+        if !no_leading.is_empty() && self.whitelist.contains(no_leading) {
+            return Some(no_leading.to_string());
+        }
+        
+        let no_dots = base.trim_matches('.');
+        if !no_dots.is_empty() && self.whitelist.contains(no_dots) {
+            return Some(no_dots.to_string());
+        }
+        
+        None
     }
 }
 
@@ -92,6 +139,13 @@ mod tests {
         linguist.stopwords.insert("the".to_string());
         linguist.stopwords.insert("are".to_string());
 
+        // Mock whitelist
+        linguist.whitelist.insert("c++".to_string());
+        linguist.whitelist.insert("c#".to_string());
+        linguist.whitelist.insert(".net".to_string());
+        linguist.whitelist.insert("node.js".to_string());
+
+        // Test 1: Basic processing
         let text = "The cats are running fast!";
         let tokens = linguist.process(text);
         
@@ -100,5 +154,20 @@ mod tests {
         // "running" -> "run"
         // "fast" -> "fast"
         assert_eq!(tokens, vec!["cat", "run", "fast"]);
+
+        // Test 2: Whitelist processing
+        let text_whitelist = "I love c++ and c# but also node.js and .net framework.";
+        let tokens_whitelist = linguist.process(text_whitelist);
+        
+        let expected_whitelist = vec![
+            "i", "love", "c++", "and", "c#", "but", "also", "node.js", "and", ".net", "framework"
+        ];
+        assert_eq!(tokens_whitelist, expected_whitelist);
+
+        // Test 3: Whitelist mixed with punctuation
+        let text_punct = "The language is (c++), or [c++]!";
+        let tokens_punct = linguist.process(text_punct);
+        // "the" is stopword
+        assert_eq!(tokens_punct, vec!["language", "is", "c++", "or", "c++"]);
     }
 }

@@ -273,6 +273,9 @@ async fn main() -> Result<()> {
     linguist
         .load_lemmatization_file("data/lemmatization-en.txt")
         .context("Failed to load lemmatization file")?;
+    linguist
+        .load_whitelist("data/whitelist.txt")
+        .context("Failed to load whitelist")?;
 
     // 2. Load Data
     println!("Loading index...");
