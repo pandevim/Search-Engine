@@ -1,7 +1,7 @@
 use actix_cors::Cors;
 use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
 use anyhow::{Context, Result};
-use linguist::Linguist;
+use normalization::Normalizer;
 use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::BufReader;
@@ -28,7 +28,7 @@ struct DocumentMetadata {
 }
 
 struct AppState {
-    linguist: Linguist,
+    normalizer: Normalizer,
     trie: Trie<u8, u32>,
     occurrence_lists: Vec<Vec<Posting>>,
     documents: Vec<DocumentMetadata>,
@@ -88,7 +88,7 @@ async fn search_handler(
 }
 
 fn search(query: &str, data: &AppState) -> Vec<SearchResult> {
-    let tokens = data.linguist.process(query);
+    let tokens = data.normalizer.process(query);
     if tokens.is_empty() {
         return Vec::new();
     }
@@ -265,15 +265,15 @@ fn intersect_sorted(a: &[u32], b: &[u32]) -> Vec<u32> {
 async fn main() -> Result<()> {
     println!("Initializing Server...");
 
-    // 1. Initialize Linguist
-    let mut linguist = Linguist::new();
-    linguist
+    // 1. Initialize Normalizer
+    let mut normalizer = Normalizer::new();
+    normalizer
         .load_stopwords("data/stopwords-en.txt")
         .context("Failed to load stopwords")?;
-    linguist
+    normalizer
         .load_lemmatization_file("data/lemmatization-en.txt")
         .context("Failed to load lemmatization file")?;
-    linguist
+    normalizer
         .load_whitelist("data/whitelist.txt")
         .context("Failed to load whitelist")?;
 
@@ -295,7 +295,7 @@ async fn main() -> Result<()> {
     println!("Index loaded. {} documents available.", documents.len());
 
     let app_state = web::Data::new(AppState {
-        linguist,
+        normalizer,
         trie,
         occurrence_lists: index_data.occurrence_lists,
         documents,

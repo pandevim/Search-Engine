@@ -1,5 +1,5 @@
 use anyhow::{Context, Result};
-use linguist::Linguist;
+use normalization::Normalizer;
 use scraper::{Html, Selector};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -31,15 +31,15 @@ struct DocumentMetadata {
 fn main() -> Result<()> {
     println!("Initializing Indexer...");
 
-    // 1. Initialize Linguist
-    let mut linguist = Linguist::new();
-    linguist
+    // 1. Initialize Normalizer
+    let mut normalizer = Normalizer::new();
+    normalizer
         .load_stopwords("data/stopwords-en.txt")
         .context("Failed to load stopwords")?;
-    linguist
+    normalizer
         .load_lemmatization_file("data/lemmatization-en.txt")
         .context("Failed to load lemmatization file")?;
-    linguist
+    normalizer
         .load_whitelist("data/whitelist.txt")
         .context("Failed to load whitelist")?;
 
@@ -89,7 +89,7 @@ fn main() -> Result<()> {
                 .collect::<Vec<_>>()
                 .join(" ");
 
-            let tokens = linguist.process(&text_content);
+            let tokens = normalizer.process(&text_content);
             let doc_len = tokens.len() as u32;
             total_doc_len += doc_len as u64;
 

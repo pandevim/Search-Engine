@@ -80,7 +80,7 @@ This project is a search engine built in Rust, designed to index and search a lo
 │   ├── Cargo.toml
 │   └── src/
 │       └── main.rs
-├── linguist/
+├── normalization/
 │   ├── Cargo.toml
 │   └── src/
 │       └── lib.rs
@@ -119,8 +119,8 @@ simple/articles/a/r/t/Article_Name.html
 ...
 \end{verbatim}
 
-\subsection{Linguist}
-The \texttt{linguist} component is a text processing library responsible for preparing raw text for indexing.
+\subsection{Normalization}
+The \texttt{normalization} component is a text processing library responsible for preparing raw text for indexing.
 
 \subsubsection*{Pipeline}
 \begin{enumerate}
@@ -144,7 +144,7 @@ Following the standard inverted index design:
 \subsubsection*{Process}
 \begin{enumerate}
     \item \textbf{Initialization}: Loads the \texttt{crawled.lst} to map Document IDs (line numbers) to file paths.
-    \item \textbf{Processing}: Iterates through every document, parses the HTML to extract text and title, and uses the \texttt{Linguist} library to tokenize and stem the content.
+    \item \textbf{Processing}: Iterates through every document, parses the HTML to extract text and title, and uses the \texttt{Normalizer} library to tokenize and stem the content.
     \item \textbf{Index Construction}: Builds a temporary in-memory map of \texttt{Term $\rightarrow$ DocID $\rightarrow$ [Positions]}.
     \item \textbf{Optimization}: Sorts postings by Document ID.
     \item \textbf{Serialization}: Saves the occurrence lists, document metadata, and the Trie to disk using \texttt{bincode}.
@@ -272,10 +272,10 @@ npm run dev
 The client will be available at \texttt{http://localhost:5173}. Clicking on search results will open the local Wikipedia pages directly in your browser.
 
 \subsection{Running Tests}
-To run the unit tests for the Linguist library (lemmatization, tokenizer, etc.):
+To run the unit tests for the Normalizer library (lemmatization, tokenizer, etc.):
 
 \begin{verbatim}
-cargo test --manifest-path linguist/Cargo.toml
+cargo test --manifest-path normalization/Cargo.toml
 \end{verbatim}
 
 \subsection{Generating Test Fixtures}

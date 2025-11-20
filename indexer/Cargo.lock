@@ -224,7 +224,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "bincode",
- "linguist",
+ "normalization",
  "scraper",
  "serde",
  "trie-rs",
@@ -241,13 +241,6 @@ name = "libc"
 version = "0.2.177"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2874a2af47a2325c2001a6e6fad9b16a53b802102b528163885171cf92b15976"
-
-[[package]]
-name = "linguist"
-version = "0.1.0"
-dependencies = [
- "regex",
-]
 
 [[package]]
 name = "lock_api"
@@ -305,6 +298,13 @@ name = "new_debug_unreachable"
 version = "1.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "650eef8c711430f1a879fdd01d4745a7deea475becfb90269c06775983bbf086"
+
+[[package]]
+name = "normalization"
+version = "0.1.0"
+dependencies = [
+ "regex",
+]
 
 [[package]]
 name = "once_cell"

@@ -4,16 +4,16 @@ use std::io::{self, BufRead};
 use std::path::Path;
 use regex::Regex;
 
-pub struct Linguist {
+pub struct Normalizer {
     lemmatizer: HashMap<String, String>,
     stopwords: HashSet<String>,
     whitelist: HashSet<String>,
     token_splitter: Regex,
 }
 
-impl Linguist {
+impl Normalizer {
     pub fn new() -> Self {
-        Linguist {
+        Normalizer {
             lemmatizer: HashMap::new(),
             stopwords: HashSet::new(),
             whitelist: HashSet::new(),
@@ -130,24 +130,24 @@ mod tests {
 
     #[test]
     fn test_processing() {
-        let mut linguist = Linguist::new();
+        let mut normalizer = Normalizer::new();
         // Mock lemmatization data
-        linguist.lemmatizer.insert("running".to_string(), "run".to_string());
-        linguist.lemmatizer.insert("cats".to_string(), "cat".to_string());
+        normalizer.lemmatizer.insert("running".to_string(), "run".to_string());
+        normalizer.lemmatizer.insert("cats".to_string(), "cat".to_string());
         
         // Mock stopwords
-        linguist.stopwords.insert("the".to_string());
-        linguist.stopwords.insert("are".to_string());
+        normalizer.stopwords.insert("the".to_string());
+        normalizer.stopwords.insert("are".to_string());
 
         // Mock whitelist
-        linguist.whitelist.insert("c++".to_string());
-        linguist.whitelist.insert("c#".to_string());
-        linguist.whitelist.insert(".net".to_string());
-        linguist.whitelist.insert("node.js".to_string());
+        normalizer.whitelist.insert("c++".to_string());
+        normalizer.whitelist.insert("c#".to_string());
+        normalizer.whitelist.insert(".net".to_string());
+        normalizer.whitelist.insert("node.js".to_string());
 
         // Test 1: Basic processing
         let text = "The cats are running fast!";
-        let tokens = linguist.process(text);
+        let tokens = normalizer.process(text);
         
         // "the", "are" are stopwords.
         // "cats" -> "cat"
@@ -157,7 +157,7 @@ mod tests {
 
         // Test 2: Whitelist processing
         let text_whitelist = "I love c++ and c# but also node.js and .net framework.";
-        let tokens_whitelist = linguist.process(text_whitelist);
+        let tokens_whitelist = normalizer.process(text_whitelist);
         
         let expected_whitelist = vec![
             "i", "love", "c++", "and", "c#", "but", "also", "node.js", "and", ".net", "framework"
@@ -166,7 +166,7 @@ mod tests {
 
         // Test 3: Whitelist mixed with punctuation
         let text_punct = "The language is (c++), or [c++]!";
-        let tokens_punct = linguist.process(text_punct);
+        let tokens_punct = normalizer.process(text_punct);
         // "the" is stopword
         assert_eq!(tokens_punct, vec!["language", "is", "c++", "or", "c++"]);
     }
