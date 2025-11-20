@@ -71,7 +71,8 @@ This project is a search engine built in Rust, designed to index and search a lo
 │   ├── lemmatization-en.txt
 │   ├── seed.lst
 │   ├── stopwords-en.txt
-│   └── trie.bin
+│   ├── trie.bin
+│   └── whitelist.txt
 ├── fixtures/
 │   ├── 01_basic_search_input.txt
 │   ├── 01_basic_search_output.json
@@ -125,6 +126,7 @@ The \texttt{normalization} component is a text processing library responsible fo
 \subsubsection*{Pipeline}
 \begin{enumerate}
     \item \textbf{Casefolding}: Converts all text to lowercase to ensure case-insensitive matching.
+    \item \textbf{Whitelist Check}: Checks tokens against a whitelist (\texttt{data/whitelist.txt}) to preserve special terms (e.g., "C++", ".NET") that would otherwise be split by the tokenizer.
     \item \textbf{Tokenization}: Splits text into individual tokens (words) based on punctuation and whitespace.
     \item \textbf{Stopword Removal}: Filters out common English filler words (e.g., "the", "is", "at") to reduce index size and improve relevance. Uses \texttt{data/stopwords-en.txt}.
     \item \textbf{Lemmatization}: Reduces words to their root form (e.g., "running" $\rightarrow$ "run") using a dictionary-based approach sourced from \texttt{data/lemmatization-en.txt} (\href{https://github.com/michmech/lemmatization-lists}{Source}).
@@ -153,31 +155,46 @@ Following the standard inverted index design:
 \subsection{Search \& Ranking}
 The search component provides the user interface for querying the index and ranking results.
 
+\subsubsection*{Boolean Logic}
+The search engine enforces a strict Boolean AND logic for multi-term queries. Given a query $Q = \{q_1, q_2, \dots, q_n\}$, the result set $R$ is defined as the intersection of the posting lists for each term:
+\[ R = \bigcap_{i=1}^{n} \text{Postings}(q_i) \]
+This ensures that every returned document contains all the terms in the query. The intersection is computed efficiently by sorting the posting lists by Document ID and using a linear scan algorithm.
+
 \subsubsection*{Ranking Algorithm}
 The search engine uses a sophisticated ranking function that combines two relevance signals:
 
 \begin{enumerate}
-    \item \textbf{BM25 Score}: A probabilistic information retrieval model that ranks documents based on the query terms appearing in each document, regardless of their proximity within the document. It accounts for:
+    \item \textbf{BM25 Score}: A probabilistic information retrieval model that ranks documents based on the query terms appearing in each document.
+    
+    The BM25 score for a document $D$ and query $Q$ is calculated as:
+    \[ \text{BM25}(D, Q) = \sum_{i=1}^{n} \text{IDF}(q_i) \cdot \frac{f(q_i, D) \cdot (k_1 + 1)}{f(q_i, D) + k_1 \cdot (1 - b + b \cdot \frac{|D|}{\text{avgdl}})} \]
+    
+    Where the Inverse Document Frequency (IDF) is:
+    \[ \text{IDF}(q_i) = \ln \left( \frac{N - n(q_i) + 0.5}{n(q_i) + 0.5} + 1 \right) \]
+    
+    \textbf{Parameters:}
     \begin{itemize}
-        \item \textbf{Term Frequency (TF)}: How often the term appears in the document.
-        \item \textbf{Inverse Document Frequency (IDF)}: How rare the term is across the entire corpus.
-        \item \textbf{Document Length}: Penalizes very long documents (which might contain terms just by chance).
+        \item $f(q_i, D)$: Term frequency of $q_i$ in $D$.
+        \item $|D|$: Length of document $D$.
+        \item $\text{avgdl}$: Average document length in the corpus.
+        \item $N$: Total number of documents.
+        \item $n(q_i)$: Number of documents containing $q_i$.
+        \item $k_1 = 1.2$, $b = 0.75$: Tunable parameters.
     \end{itemize}
 
     \item \textbf{Window Score}: Measures the proximity of query terms within the document.
-    \begin{itemize}
-        \item It calculates the smallest window (span of words) that contains all query terms.
-        \item Documents where terms appear closer together receive a higher score.
-    \end{itemize}
+    \[ \text{Window}(D, Q) = \frac{|Q|}{\text{min\_window}(Q, D)} \]
+    Where $\text{min\_window}(Q, D)$ is the size of the smallest span of text in $D$ containing all terms in $Q$.
 \end{enumerate}
 
 \textbf{Final Score Formula}:
 \[ \text{Score}(D, Q) = \alpha \cdot \text{Window}(D, Q) + \beta \cdot \text{BM25}(D, Q) \]
+Where $\alpha$ and $\beta$ are weights for the respective scores.
 
 \subsubsection*{Features}
 \begin{itemize}
-    \item \textbf{Boolean AND Search}: Supports multi-word queries by finding the intersection of documents containing all terms.
     \item \textbf{Ranked Results}: Returns results sorted by relevance score.
+    \item \textbf{Fast Retrieval}: Uses optimized data structures for sub-millisecond query times.
 \end{itemize}
 
 \subsection{Server (REST API)}
@@ -219,6 +236,7 @@ The client is a modern web interface built with \textbf{SvelteKit} that consumes
     \item Local Wikipedia dump extracted to \texttt{wikipedia-simple-html-dump/} directory
     \item Lemmatization dictionary at \texttt{data/lemmatization-en.txt} (\href{https://github.com/michmech/lemmatization-lists}{Source})
     \item Stopwords list at \texttt{data/stopwords-en.txt}
+    \item Whitelist at \texttt{data/whitelist.txt}
 \end{itemize}
 
 \subsection{Configuration}
