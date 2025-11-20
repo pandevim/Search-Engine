@@ -19,6 +19,20 @@
   let loading = false;
   let error: string | null = null;
 
+  let currentPage = 0;
+  const perPage = 10;
+
+  $: results = response ? response.results : [];
+  $: totalRows = results.length;
+  $: totalPages = Math.ceil(totalRows / perPage);
+  
+  // Reset page when results change
+  $: totalRows, currentPage = 0;
+
+  $: start = currentPage * perPage;
+  $: end = currentPage === totalPages - 1 ? totalRows - 1 : start + perPage - 1;
+  $: trimmedResults = results.slice(start, end + 1);
+
   $: if (!query.trim()) {
     response = null;
     error = null;
@@ -51,151 +65,77 @@
   }
 </script>
 
-<main class="container">
-  <div class="search-box">
-    <img src="/logo.png" alt="Logo" />
-    <div class="input-group">
+<main class="container mx-auto max-w-[800px] p-8">
+  <div class="text-center mb-8">
+    <img src="/logo.png" alt="Logo" class="mx-auto" />
+    <div class="flex justify-center">
       <input
         type="text"
         bind:value={query}
         on:keydown={handleKeydown}
         placeholder="Search Wikipedia"
         disabled={loading}
+        class="w-full max-w-[400px] px-4 py-3 text-base border border-[#ddd] border-r-0 focus:outline-none"
       />
-      <button on:click={handleSearch} disabled={loading}>
+      <button 
+        on:click={handleSearch} 
+        disabled={loading}
+        class="px-6 py-3 text-base cursor-pointer border border-[#ddd] hover:not-disabled:bg-[#f3f3f3] disabled:bg-[#95a5a6] disabled:cursor-not-allowed"
+      >
         {'Search'}
       </button>
     </div>
   </div>
 
   {#if error}
-    <div class="error">
+    <div class="text-center mt-4 text-[#e74c3c]">
       <p>Error: {error}</p>
     </div>
   {/if}
 
   {#if response}
-    <div class="results-info">
+    <div class="mb-4 text-sm text-[#7f8c8d]">
       <p>
         Found <strong>{response.total_results}</strong> results in
         <strong>{response.time_taken_ms.toFixed(2)}ms</strong>
       </p>
     </div>
 
-    <ul class="results-list">
-      {#each response.results as result}
-        <li class="result-item">
-          <a href={`/wiki/${result.path}`} target="_blank" rel="noopener noreferrer">
-            <div class="title">{result.title}</div>
-            <span class="path">{result.path}</span>
+    <ul class="list-none p-0">
+      {#each trimmedResults as result}
+        <li class="bg-white p-4 mb-2">
+          <a href={`/wiki/${result.path}`} target="_blank" rel="noopener noreferrer" class="block no-underline text-inherit group">
+            <div class="text-[#2980b9] font-medium text-lg mb-1 group-hover:underline">{result.title}</div>
+            <span class="block font-mono text-[#27ae60] text-sm">{result.path}</span>
           </a>
         </li>
       {/each}
     </ul>
+
+    {#if totalRows > perPage}
+      <div class="flex items-center justify-center mt-8">
+        <button
+          on:click={() => (currentPage -= 1)}
+          disabled={currentPage === 0}
+          aria-label="Previous page"
+          class="px-4 py-2 border-none disabled:bg-[#e1e1e1] disabled:opacity-50"
+        >
+          &lt;
+        </button>
+        <p class="mx-4">{start + 1} - {end + 1} of {totalRows}</p>
+        <button
+          on:click={() => (currentPage += 1)}
+          disabled={currentPage === totalPages - 1}
+          aria-label="Next page"
+          class="px-4 py-2 border-none disabled:bg-[#e1e1e1] disabled:opacity-50 cursor-pointer"
+        >
+          &gt;
+        </button>
+      </div>
+    {/if}
   {:else if !loading && !error && query}
     <!-- Optional: State when no search has been performed yet but query exists (maybe cleared results) -->
   {/if}
 </main>
 
-<style>
-  :global(body) {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
-  }
 
-  .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
-  .search-box {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-
-  .input-group {
-    display: flex;
-    justify-content: center;
-  }
-
-  input {
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    border: 1px solid #ddd;
-    border-right: none;
-    width: 100%;
-    max-width: 400px;
-  }
-
-  input:focus {
-    outline: none;
-    border-color: none;
-  }
-
-  button {
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    cursor: pointer;
-    border: 1px solid #ddd;
-  }
-
-  button:hover:not(:disabled) {
-    background-color: #f3f3f3;
-  }
-
-  button:disabled {
-    background-color: #95a5a6;
-    cursor: not-allowed;
-  }
-
-  .results-info {
-    margin-bottom: 1rem;
-    color: #7f8c8d;
-    font-size: 0.9rem;
-  }
-
-  .results-list {
-    list-style: none;
-    padding: 0;
-  }
-
-  .result-item {
-    background: white;
-    padding: 1rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .result-item a {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-  }
-
-  .result-item a:hover .title {
-    text-decoration: underline;
-  }
-
-  .title {
-    color: #2980b9;
-    font-weight: 500;
-    font-size: 1.1rem;
-    margin-bottom: 0.25rem;
-  }
-
-  .path {
-    font-family: monospace;
-    color: #27ae60;
-    font-size: 0.85rem;
-    display: block;
-  }
-
-  .error {
-    color: #e74c3c;
-    text-align: center;
-    margin-top: 1rem;
-  }
-</style>
