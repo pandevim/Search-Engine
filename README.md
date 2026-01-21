@@ -153,11 +153,7 @@ The server component exposes the search functionality via a RESTful API using `a
 
 The client is a web interface built with **SvelteKit** that consumes the REST API.
 
-#### Features
-
-- **Clean UI**: Simple search bar and results display.
-- **Real-time Feedback**: Shows search time and total results found.
-- **Direct Links**: Links directly to the local file paths (requires browser permission or local setup).
+**Note**: The client source code has been moved to a separate repository: [search-engine-client](https://github.com/pandevim/search-engine-client)
 
 ### 7. Vercel API (Serverless)
 
@@ -207,34 +203,17 @@ cargo run --manifest-path server/Cargo.toml --release
 
 ### Running the Client
 
-To start the web interface. Ensure you have Node.js installed.
+The web interface is hosted in a separate repository. To set it up:
 
-**Important:** The client requires a symbolic link to the Wikipedia dump to serve the files locally.
+1. Clone the client repository:
 
-1.  Create the symbolic link (if not already created):
+   ```bash
+   git clone https://github.com/pandevim/search-engine-client.git
+   ```
 
-    ```bash
-    # Run from the project root
-    ln -s "../../wikipedia-simple-html-dump" "client/static/wiki"
-    ```
+2. Follow the setup instructions in the `search-engine-client` [README](https://github.com/pandevim/search-engine-client/blob/main/README.md).
 
-2.  **Environment Setup**:
-    The client connects to the backend server, which defaults to `http://127.0.0.1:8080/search`. If your server is running on a different host or port, you can configure this by setting the `PUBLIC_API_URL` environment variable.
-
-    You can create a `.env` file in the `client/` directory:
-
-    ```bash
-    PUBLIC_API_URL=http://your-server-ip:8080/search
-    ```
-
-3.  Install dependencies and run the development server:
-    ```bash
-    cd client
-    npm install
-    npm run dev
-    ```
-
-The client will be available at `http://localhost:5173`. Clicking on search results will open the local Wikipedia pages directly in your browser.
+3. Ensure your backend server (from this repository) is running on http://127.0.0.1:8080 (or configure the client to point to your custom port).
 
 ### Running Tests
 
