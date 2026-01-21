@@ -86,9 +86,10 @@ async fn main() -> Result<(), Error> {
     run(service_fn(handler)).await
 }
 
-use vercel_runtime::{Body, Response, StatusCode};
+use http::StatusCode;
+use vercel_runtime::Response;
 
-pub async fn handler(req: Request) -> Result<Response<Body>, Error> {
+pub async fn handler(req: Request) -> Result<Response<String>, Error> {
     let allowed_origin = std::env::var("ALLOWED_ORIGIN").unwrap_or_else(|_| "*".to_string());
 
     // Handle OPTIONS request for CORS preflight
@@ -98,7 +99,7 @@ pub async fn handler(req: Request) -> Result<Response<Body>, Error> {
             .header("Access-Control-Allow-Origin", &allowed_origin)
             .header("Access-Control-Allow-Methods", "GET, OPTIONS")
             .header("Access-Control-Allow-Headers", "*")
-            .body(Body::Empty)?);
+            .body(String::new())?);
     }
 
     let app_state = APP_STATE.get().ok_or_else(|| Error::from("App state not initialized"))?;
@@ -123,7 +124,7 @@ pub async fn handler(req: Request) -> Result<Response<Body>, Error> {
             .status(StatusCode::OK)
             .header("Access-Control-Allow-Origin", &allowed_origin)
             .header("Content-Type", "application/json")
-            .body(json_response.to_string().into())?);
+            .body(json_response.to_string())?);
     }
 
     let results = search(query, app_state);
@@ -140,5 +141,5 @@ pub async fn handler(req: Request) -> Result<Response<Body>, Error> {
         .status(StatusCode::OK)
         .header("Access-Control-Allow-Origin", &allowed_origin)
         .header("Content-Type", "application/json")
-        .body(json_response.to_string().into())?)
+        .body(json_response.to_string())?)
 }
