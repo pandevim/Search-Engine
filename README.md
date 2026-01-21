@@ -103,9 +103,9 @@ The search engine uses a ranking function that combines two relevance signals:
 
 2.  **Window Score**: Measures the proximity of query terms within the document.
 
-    $$\text{Window}(D, Q) = \frac{|Q|}{\text{min\_window}(Q, D)}$$
+    $$\text{Window}(D, Q) = \frac{|Q|}{\text{min\\_window}(Q, D)}$$
 
-    Where $\text{min\_window}(Q, D)$ is the size of the smallest span of text in $D$ containing all terms in $Q$.
+    Where $\text{min\\_window}(Q, D)$ is the size of the smallest span of text in $D$ containing all terms in $Q$.
 
 **Final Score Formula**:
 
@@ -203,7 +203,16 @@ To start the web interface. Ensure you have Node.js installed.
     # Run from the project root
     ln -s "../../wikipedia-simple-html-dump" "client/static/wiki"
     ```
-2.  Install dependencies and run the development server:
+
+2.  **Environment Setup**:
+    The client connects to the backend server, which defaults to `http://127.0.0.1:8080/search`. If your server is running on a different host or port, you can configure this by setting the `PUBLIC_API_URL` environment variable.
+    
+    You can create a `.env` file in the `client/` directory:
+    ```bash
+    PUBLIC_API_URL=http://your-server-ip:8080/search
+    ```
+
+3.  Install dependencies and run the development server:
     ```bash
     cd client
     npm install
@@ -238,6 +247,6 @@ The `screenshots/` directory contains captured images of these test cases, demon
 
 ## Data Source
 
-The data used for this search engine is sourced from the Wikimedia Dumps, specifically the Simple English Wikipedia Database dump, which can be found at [dumps.wikimedia.org](https://dumps.wikimedia.org/).
+The data used for this search engine is sourced from the Wikimedia Dumps, specifically the [Simple English Wikipedia Database dump](https://dumps.wikimedia.org/other/static_html_dumps/current/en/), which can be found at [dumps.wikimedia.org](https://dumps.wikimedia.org/) or my personal [Google Drive](https://drive.google.com/file/d/1LqYcD7N9H8YC9W1YI6puTX3JwZ2NlGOZ/view?usp=sharing).
 The lemmatization list is sourced from [michmech/lemmatization-lists](https://github.com/michmech/lemmatization-lists).
 The stopwords list is sourced from the `nltk` python library.
