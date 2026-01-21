@@ -12,7 +12,7 @@
     query: string;
     results: SearchResult[];
     total_results: number;
-    time_taken_ms: number;
+    time_taken_ms?: number;
   }
 
   let query = '';
@@ -109,8 +109,10 @@
   {#if response}
     <div class="mb-4 text-sm text-[#7f8c8d]">
       <p>
-        Found <strong>{response.total_results}</strong> results in
-        <strong>{response.time_taken_ms.toFixed(2)}ms</strong>
+        Found <strong>{response.total_results}</strong> results
+        {#if response.time_taken_ms}
+           in <strong>{response.time_taken_ms.toFixed(2)}ms</strong>
+        {/if}
       </p>
     </div>
 

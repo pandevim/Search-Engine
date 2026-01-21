@@ -1,7 +1,8 @@
-use serde_json::{json, Value};
+use serde_json::json;
 use simple_wiki_search::{load_app_state, search, AppState};
 use std::path::Path;
 use std::sync::OnceLock;
+use std::time::Instant;
 use tokio::fs;
 use vercel_runtime::{run, service_fn, Error, Request};
 
@@ -129,14 +130,18 @@ pub async fn handler(req: Request) -> Result<Response<String>, Error> {
             .body(json_response.to_string())?);
     }
 
+    let start = Instant::now();
     let results = search(query, app_state);
+    let duration = start.elapsed();
+
     let total_results = results.len();
     let top_results = results.into_iter().take(50).collect::<Vec<_>>();
 
     let json_response = json!({
         "query": query,
         "results": top_results,
-        "total_results": total_results
+        "total_results": total_results,
+        "time_taken_ms": duration.as_secs_f64() * 1000.0
     });
 
     Ok(Response::builder()
