@@ -90,7 +90,9 @@ use http::StatusCode;
 use vercel_runtime::Response;
 
 pub async fn handler(req: Request) -> Result<Response<String>, Error> {
-    let allowed_origin = std::env::var("ALLOWED_ORIGIN").unwrap_or_else(|_| "*".to_string());
+    // For a public search API, we want to allow any origin to access it.
+    // This avoids issues with Vercel previews, localhost, and production domains mismatching.
+    let allowed_origin = "*".to_string();
 
     // Handle OPTIONS request for CORS preflight
     if req.method() == "OPTIONS" {
