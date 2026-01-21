@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { dev } from '$app/environment';
+  import { env } from '$env/dynamic/public';
 
   interface SearchResult {
     id: number;
@@ -21,6 +22,16 @@
 
   let currentPage = 0;
   const perPage = 10;
+
+  function getLink(path: string): string {
+    if (dev) {
+      return `/wiki/${path}`;
+    } else {
+      // Remove .html extension for live wikipedia
+      const articleName = path.replace(/\.html$/, '');
+      return `https://simple.wikipedia.org/wiki/${articleName}`;
+    }
+  }
 
   $: results = response ? response.results : [];
   $: totalRows = results.length;
@@ -45,8 +56,10 @@
     error = null;
     response = null;
 
+    const apiUrl = env.PUBLIC_API_URL || 'http://127.0.0.1:8080/search';
+
     try {
-      const res = await fetch(`http://127.0.0.1:8080/search?q=${encodeURIComponent(query)}`);
+      const res = await fetch(`${apiUrl}?q=${encodeURIComponent(query)}`);
       if (!res.ok) {
         throw new Error('Failed to fetch results');
       }
@@ -104,9 +117,9 @@
     <ul class="list-none p-0">
       {#each trimmedResults as result}
         <li class="bg-white p-4 mb-2">
-          <a href={`/wiki/${result.path}`} target="_blank" rel="noopener noreferrer" class="block no-underline text-inherit group">
+          <a href={getLink(result.path)} target="_blank" rel="noopener noreferrer" class="block no-underline text-inherit group">
             <div class="text-[#2980b9] font-medium text-lg mb-1 group-hover:underline">{result.title}</div>
-            <span class="block font-mono text-[#27ae60] text-sm">{result.path}</span>
+            <span class="block font-mono text-[#27ae60] text-sm">{getLink(result.path)}</span>
           </a>
         </li>
       {/each}
