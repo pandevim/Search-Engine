@@ -261,31 +261,34 @@ pub fn search(query: &str, data: &AppState) -> Vec<SearchResult> {
     scored_results
 }
 
-pub fn load_app_state() -> Result<AppState> {
+pub fn load_app_state(base_path: Option<&str>) -> Result<AppState> {
+    let base = base_path.unwrap_or(".");
+    let data_path = |path: &str| format!("{}/{}", base, path);
+
     // 1. Initialize Normalizer
     let mut normalizer = Normalizer::new();
     normalizer
-        .load_stopwords("data/stopwords-en.txt")
+        .load_stopwords(&data_path("data/stopwords-en.txt"))
         .context("Failed to load stopwords")?;
     normalizer
-        .load_lemmatization_file("data/lemmatization-en.txt")
+        .load_lemmatization_file(&data_path("data/lemmatization-en.txt"))
         .context("Failed to load lemmatization file")?;
     normalizer
-        .load_whitelist("data/whitelist.txt")
+        .load_whitelist(&data_path("data/whitelist.txt"))
         .context("Failed to load whitelist")?;
 
     // 2. Load Data
-    println!("Loading index...");
+    println!("Loading index from base: {}", base);
 
-    let trie_file = File::open("data/trie.bin").context("Failed to open trie.bin")?;
+    let trie_file = File::open(data_path("data/trie.bin")).context("Failed to open trie.bin")?;
     let reader = BufReader::new(trie_file);
     let trie: Trie<u8, u32> = bincode::deserialize_from(reader).context("Failed to deserialize trie")?;
 
-    let index_file = File::open("data/inverted_index.bin").context("Failed to open inverted_index.bin")?;
+    let index_file = File::open(data_path("data/inverted_index.bin")).context("Failed to open inverted_index.bin")?;
     let reader = BufReader::new(index_file);
     let index_data: IndexData = bincode::deserialize_from(reader).context("Failed to deserialize index")?;
 
-    let docs_file = File::open("data/docs.bin").context("Failed to open docs.bin")?;
+    let docs_file = File::open(data_path("data/docs.bin")).context("Failed to open docs.bin")?;
     let reader = BufReader::new(docs_file);
     let documents: Vec<DocumentMetadata> = bincode::deserialize_from(reader).context("Failed to deserialize docs")?;
 
@@ -297,3 +300,4 @@ pub fn load_app_state() -> Result<AppState> {
         avgdl: index_data.avgdl,
     })
 }
+

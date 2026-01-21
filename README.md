@@ -159,6 +159,10 @@ The client is a web interface built with **SvelteKit** that consumes the REST AP
 - **Real-time Feedback**: Shows search time and total results found.
 - **Direct Links**: Links directly to the local file paths (requires browser permission or local setup).
 
+### 7. Vercel API (Serverless)
+
+The `api` component wraps the core search logic in a Vercel Serverless Function, allowing the search engine to be deployed to the cloud without managing a dedicated server. It shares the same `AppState` loading mechanism as the main server but is optimized for "cold starts" using `OnceLock`.
+
 ## Usage
 
 ### Prerequisites
@@ -255,6 +259,36 @@ This will create a `fixtures/` directory populated with input (`.txt`) and outpu
 #### Test Case Screenshots
 
 The `screenshots/` directory contains captured images of these test cases, demonstrating the system's correct handling of various boundary conditions and edge cases.
+
+## Deployment
+
+This project is configured for serverless deployment on [Vercel](https://vercel.com).
+
+### Vercel Serverless Function
+
+The `api` directory contains a Rust-based serverless function that powers the search backend. It is optimized for the Vercel Runtime v2 to ensure high performance and low latency.
+
+#### Configuration
+
+- **`vercel.json`**: Configures the rewrites to route `/api/search` to the Rust function.
+- **`api/Cargo.toml`**: Defines the `search` binary and its dependencies, including `vercel_runtime`.
+
+#### Deploying to Vercel
+
+1.  **Install Vercel CLI**:
+
+    ```bash
+    npm i -g vercel
+    ```
+
+2.  **Deploy**:
+    Run the following command in the project root:
+
+    ```bash
+    vercel
+    ```
+
+    **Note**: The project includes ~85MB of data in the `data/` directory. Vercel's serverless function size limit is 50MB (zipped). If deployment fails due to size limits, consider hosting the data files externally (e.g., S3, Vercel Blob) or pruning the index size.
 
 ## Data Source
 

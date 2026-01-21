@@ -54,7 +54,7 @@ async fn search_handler(
 async fn main() -> Result<()> {
     println!("Initializing Server...");
 
-    let app_state = load_app_state()?;
+    let app_state = load_app_state(None)?;
 
     println!("Index loaded successfully. {} documents available.", app_state.documents.len());
 
