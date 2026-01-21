@@ -1,8 +1,8 @@
 use actix_cors::Cors;
 use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
-use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use std::time::Instant;
+use anyhow::Result;
 
 use simple_wiki_search::{load_app_state, search, AppState, SearchResult};
 

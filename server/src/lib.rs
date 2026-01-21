@@ -3,37 +3,37 @@ use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::BufReader;
 use trie_rs::map::Trie;
-use anyhow::Result;
+use anyhow::{Context, Result};
 
 #[derive(Deserialize, Debug)]
-struct Posting {
+pub struct Posting {
     doc_id: u32,
     positions: Vec<u32>,
 }
 
 #[derive(Deserialize)]
-struct IndexData {
+pub struct IndexData {
     occurrence_lists: Vec<Vec<Posting>>,
     avgdl: f64,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
-struct DocumentMetadata {
+pub struct DocumentMetadata {
     path: String,
     title: String,
     len: u32,
 }
 
-struct AppState {
-    normalizer: Normalizer,
-    trie: Trie<u8, u32>,
-    occurrence_lists: Vec<Vec<Posting>>,
-    documents: Vec<DocumentMetadata>,
-    avgdl: f64,
+pub struct AppState {
+    pub normalizer: Normalizer,
+    pub trie: Trie<u8, u32>,
+    pub occurrence_lists: Vec<Vec<Posting>>,
+    pub documents: Vec<DocumentMetadata>,
+    pub avgdl: f64,
 }
 
 #[derive(Serialize)]
-struct SearchResult {
+pub struct SearchResult {
     id: u32,
     path: String,
     title: String,
