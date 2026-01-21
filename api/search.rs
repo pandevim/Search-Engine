@@ -86,7 +86,21 @@ async fn main() -> Result<(), Error> {
     run(service_fn(handler)).await
 }
 
-pub async fn handler(req: Request) -> Result<Value, Error> {
+use vercel_runtime::{Body, Response, StatusCode};
+
+pub async fn handler(req: Request) -> Result<Response<Body>, Error> {
+    let allowed_origin = std::env::var("ALLOWED_ORIGIN").unwrap_or_else(|_| "*".to_string());
+
+    // Handle OPTIONS request for CORS preflight
+    if req.method() == "OPTIONS" {
+        return Ok(Response::builder()
+            .status(StatusCode::OK)
+            .header("Access-Control-Allow-Origin", &allowed_origin)
+            .header("Access-Control-Allow-Methods", "GET, OPTIONS")
+            .header("Access-Control-Allow-Headers", "*")
+            .body(Body::Empty)?);
+    }
+
     let app_state = APP_STATE.get().ok_or_else(|| Error::from("App state not initialized"))?;
 
     let url = req.uri();
@@ -100,20 +114,31 @@ pub async fn handler(req: Request) -> Result<Value, Error> {
         .unwrap_or("");
 
     if query.is_empty() {
-        return Ok(json!({
+        let json_response = json!({
             "error": "Missing query parameter 'q'",
             "results": [],
             "total_results": 0
-        }));
+        });
+        return Ok(Response::builder()
+            .status(StatusCode::OK)
+            .header("Access-Control-Allow-Origin", &allowed_origin)
+            .header("Content-Type", "application/json")
+            .body(json_response.to_string().into())?);
     }
 
     let results = search(query, app_state);
     let total_results = results.len();
     let top_results = results.into_iter().take(50).collect::<Vec<_>>();
 
-    Ok(json!({
+    let json_response = json!({
         "query": query,
         "results": top_results,
         "total_results": total_results
-    }))
+    });
+
+    Ok(Response::builder()
+        .status(StatusCode::OK)
+        .header("Access-Control-Allow-Origin", &allowed_origin)
+        .header("Content-Type", "application/json")
+        .body(json_response.to_string().into())?)
 }
