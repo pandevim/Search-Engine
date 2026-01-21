@@ -8,7 +8,7 @@ use std::io::{BufReader, BufWriter};
 use std::path::Path;
 use trie_rs::map::{Trie, TrieBuilder};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Debug)]
 struct Posting {
     doc_id: u32,
     positions: Vec<u32>,
@@ -17,7 +17,8 @@ struct Posting {
 #[derive(Serialize, Deserialize)]
 struct IndexData {
     // Stores the occurrence lists for each term.
-    occurrence_lists: Vec<Vec<Posting>>,
+    // MODIFIED: Storing raw bytes (compressed) instead of Postings
+    occurrence_lists: Vec<Vec<u8>>,
     avgdl: f64,
 }
 
@@ -26,6 +27,14 @@ struct DocumentMetadata {
     path: String,
     title: String,
     len: u32,
+}
+
+fn encode_varint(mut n: u32, buf: &mut Vec<u8>) {
+    while n >= 128 {
+        buf.push((n & 127 | 128) as u8);
+        n >>= 7;
+    }
+    buf.push(n as u8);
 }
 
 fn main() -> Result<()> {
@@ -126,7 +135,7 @@ fn main() -> Result<()> {
     };
 
     // 4. Sort occurrence lists and prepare for storage
-    let mut occurrence_lists: Vec<Vec<Posting>> = Vec::new();
+    let mut occurrence_lists: Vec<Vec<u8>> = Vec::new();
     let mut trie_builder = TrieBuilder::new();
 
     // We iterate over the hashmap, move lists to the vector, and add to Trie
@@ -136,11 +145,34 @@ fn main() -> Result<()> {
             .map(|(doc_id, positions)| Posting { doc_id, positions })
             .collect();
         
-        // Sort by DocID for efficient intersection
+        // Sort by DocID
         postings.sort_unstable_by_key(|p| p.doc_id);
 
+        // COMPRESSION: Delta Encoding + VarInt
+        let mut encoded_list: Vec<u8> = Vec::new();
+        let mut last_doc_id = 0;
+
+        for posting in postings {
+            // Delta DocID
+            let doc_delta = posting.doc_id - last_doc_id;
+            encode_varint(doc_delta, &mut encoded_list);
+            last_doc_id = posting.doc_id;
+
+            // Frequency (number of positions)
+            let freq = posting.positions.len() as u32;
+            encode_varint(freq, &mut encoded_list);
+
+            // Delta Positions
+            let mut last_pos = 0;
+            for pos in posting.positions {
+                let pos_delta = pos - last_pos;
+                encode_varint(pos_delta, &mut encoded_list);
+                last_pos = pos;
+            }
+        }
+
         let list_index = occurrence_lists.len() as u32;
-        occurrence_lists.push(postings);
+        occurrence_lists.push(encoded_list);
         
         trie_builder.push(term, list_index);
     }

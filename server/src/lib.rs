@@ -5,7 +5,7 @@ use std::io::BufReader;
 use trie_rs::map::Trie;
 use anyhow::{Context, Result};
 
-#[derive(Deserialize, Debug)]
+#[derive(Debug)]
 pub struct Posting {
     doc_id: u32,
     positions: Vec<u32>,
@@ -13,7 +13,7 @@ pub struct Posting {
 
 #[derive(Deserialize)]
 pub struct IndexData {
-    occurrence_lists: Vec<Vec<Posting>>,
+    occurrence_lists: Vec<Vec<u8>>,
     avgdl: f64,
 }
 
@@ -27,7 +27,7 @@ pub struct DocumentMetadata {
 pub struct AppState {
     pub normalizer: Normalizer,
     pub trie: Trie<u8, u32>,
-    pub occurrence_lists: Vec<Vec<Posting>>,
+    pub occurrence_lists: Vec<Vec<u8>>,
     pub documents: Vec<DocumentMetadata>,
     pub avgdl: f64,
 }
@@ -39,6 +39,51 @@ pub struct SearchResult {
     title: String,
     score: f64,
 }
+
+fn decode_varint(data: &[u8], index: &mut usize) -> u32 {
+    let mut result = 0;
+    let mut shift = 0;
+    loop {
+        let byte = data[*index];
+        *index += 1;
+        result |= ((byte & 127) as u32) << shift;
+        if byte & 128 == 0 {
+            break;
+        }
+        shift += 7;
+    }
+    result
+}
+
+fn decode_posting_list(data: &[u8]) -> Vec<Posting> {
+    let mut postings = Vec::new();
+    let mut index = 0;
+    let mut last_doc_id = 0;
+
+    while index < data.len() {
+        // Delta DocID
+        let doc_delta = decode_varint(data, &mut index);
+        let doc_id = last_doc_id + doc_delta;
+        last_doc_id = doc_id;
+
+        // Frequency
+        let freq = decode_varint(data, &mut index);
+
+        // Positions
+        let mut positions = Vec::with_capacity(freq as usize);
+        let mut last_pos = 0;
+        for _ in 0..freq {
+            let pos_delta = decode_varint(data, &mut index);
+            let pos = last_pos + pos_delta;
+            positions.push(pos);
+            last_pos = pos;
+        }
+
+        postings.push(Posting { doc_id, positions });
+    }
+    postings
+}
+
 
 fn calculate_min_window(term_positions: &Vec<Vec<u32>>) -> u32 {
     if term_positions.is_empty() {
@@ -116,11 +161,13 @@ pub fn search(query: &str, data: &AppState) -> Vec<SearchResult> {
     }
 
     // 1. Retrieve postings lists for all query terms
-    let mut query_postings: Vec<&Vec<Posting>> = Vec::new();
+    // Decoded lists
+    let mut decoded_postings: Vec<Vec<Posting>> = Vec::new();
+
     for token in &tokens {
         if let Some(list_index) = data.trie.exact_match(token) {
-            if let Some(list) = data.occurrence_lists.get(*list_index as usize) {
-                query_postings.push(list);
+            if let Some(encoded_list) = data.occurrence_lists.get(*list_index as usize) {
+                decoded_postings.push(decode_posting_list(encoded_list));
             } else {
                 return Vec::new(); // Term found in trie but not in list? Should not happen.
             }
@@ -129,15 +176,15 @@ pub fn search(query: &str, data: &AppState) -> Vec<SearchResult> {
         }
     }
 
-    if query_postings.is_empty() {
+    if decoded_postings.is_empty() {
         return Vec::new();
     }
 
     // 2. Find intersection of DocIDs
     // We start with the DocIDs of the first term
-    let mut common_doc_ids: Vec<u32> = query_postings[0].iter().map(|p| p.doc_id).collect();
+    let mut common_doc_ids: Vec<u32> = decoded_postings[0].iter().map(|p| p.doc_id).collect();
 
-    for other_list in query_postings.iter().skip(1) {
+    for other_list in decoded_postings.iter().skip(1) {
         let other_ids: Vec<u32> = other_list.iter().map(|p| p.doc_id).collect();
         common_doc_ids = intersect_sorted(&common_doc_ids, &other_ids);
         if common_doc_ids.is_empty() {
@@ -166,7 +213,7 @@ pub fn search(query: &str, data: &AppState) -> Vec<SearchResult> {
                 // Find the posting for this term and doc_id
                 // Since we know doc_id is in the list, we can find it.
                 // Optimization: We could have collected these during intersection, but binary search is fast enough.
-                let posting_list = query_postings[i];
+                let posting_list = &decoded_postings[i];
                 if let Ok(idx) = posting_list.binary_search_by_key(&doc_id, |p| p.doc_id) {
                     let posting = &posting_list[idx];
                     let tf = posting.positions.len() as f64;

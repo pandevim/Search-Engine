@@ -67,6 +67,15 @@ Following the standard inverted index design:
 4.  **Optimization**: Sorts postings by Document ID.
 5.  **Serialization**: Saves the occurrence lists, document metadata, and the Trie to disk using `bincode`.
 
+#### Optimization: Compact Integer Encoding
+
+To reduce the size of the inverted index, the system creates a specialized binary format using two techniques:
+
+1.  **Delta Encoding**: Instead of storing absolute Document IDs and positions, we store the difference (delta) between consecutive values. Since these lists are sorted, the deltas are much smaller integers than the original values.
+2.  **VByte (VarInt) Encoding**: These small integer deltas are compressed using Variable Byte encoding, which uses fewer bytes for smaller numbers (e.g., 1 byte for numbers < 128).
+
+**Impact**: This optimization reduces the `inverted_index.bin` file size by approximately **75%** (e.g., from ~280 MB to ~67 MB for the full dataset).
+
 ### 4. Search & Ranking
 
 The search component provides the user interface for querying the index and ranking results.
@@ -173,7 +182,7 @@ simple/index.html
 To execute the crawler from the project root. This will traverse the `wikipedia-simple-html-dump` directory and generate `data/crawled.lst`.
 
 ```bash
-cargo run --manifest-path crawler/Cargo.toml
+cargo run --manifest-path crawler/Cargo.toml --release
 ```
 
 ### Running the Indexer
@@ -181,7 +190,7 @@ cargo run --manifest-path crawler/Cargo.toml
 To build the index from the crawled data. This will process the files listed in `crawled.lst` and generate `data/inverted_index.bin` and `data/trie.bin`.
 
 ```bash
-cargo run --manifest-path indexer/Cargo.toml
+cargo run --manifest-path indexer/Cargo.toml --release
 ```
 
 ### Running the Server
@@ -189,7 +198,7 @@ cargo run --manifest-path indexer/Cargo.toml
 To start the REST API server on `http://127.0.0.1:8080`.
 
 ```bash
-cargo run --manifest-path server/Cargo.toml
+cargo run --manifest-path server/Cargo.toml --release
 ```
 
 ### Running the Client
@@ -199,6 +208,7 @@ To start the web interface. Ensure you have Node.js installed.
 **Important:** The client requires a symbolic link to the Wikipedia dump to serve the files locally.
 
 1.  Create the symbolic link (if not already created):
+
     ```bash
     # Run from the project root
     ln -s "../../wikipedia-simple-html-dump" "client/static/wiki"
@@ -206,8 +216,9 @@ To start the web interface. Ensure you have Node.js installed.
 
 2.  **Environment Setup**:
     The client connects to the backend server, which defaults to `http://127.0.0.1:8080/search`. If your server is running on a different host or port, you can configure this by setting the `PUBLIC_API_URL` environment variable.
-    
+
     You can create a `.env` file in the `client/` directory:
+
     ```bash
     PUBLIC_API_URL=http://your-server-ip:8080/search
     ```
