@@ -1,0 +1,8 @@
+{
+  "name": "simple-wiki-search-root",
+  "private": true,
+  "scripts": {
+    "install": "cd client && npm install",
+    "build": "cd client && npm run build"
+  }
+}
