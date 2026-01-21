@@ -1,23 +1,93 @@
 use serde_json::{json, Value};
 use simple_wiki_search::{load_app_state, search, AppState};
+use std::path::Path;
 use std::sync::OnceLock;
+use tokio::fs;
 use vercel_runtime::{run, service_fn, Error, Request};
 
 static APP_STATE: OnceLock<AppState> = OnceLock::new();
 
+const DOCS_URL: &str = "https://6yzjxguod4saepey.public.blob.vercel-storage.com/docs.bin";
+const INDEX_URL: &str = "https://6yzjxguod4saepey.public.blob.vercel-storage.com/inverted_index.bin";
+const TRIE_URL: &str = "https://6yzjxguod4saepey.public.blob.vercel-storage.com/trie.bin";
+
+async fn download_file(url: &str, path: &Path) -> Result<(), Error> {
+    if path.exists() {
+        println!("File already exists: {:?}", path);
+        return Ok(());
+    }
+    
+    println!("Downloading {} to {:?}", url, path);
+    let response = reqwest::get(url).await?;
+    let bytes = response.bytes().await?;
+    fs::write(path, bytes).await?;
+    Ok(())
+}
+
+async fn setup_index() -> Result<(), Error> {
+    let tmp_data = Path::new("/tmp/data");
+    if !tmp_data.exists() {
+        println!("Creating directory: {:?}", tmp_data);
+        fs::create_dir_all(tmp_data).await?;
+    }
+
+    // Download binaries
+    let downloads = vec![
+        (DOCS_URL, "docs.bin"),
+        (INDEX_URL, "inverted_index.bin"),
+        (TRIE_URL, "trie.bin"),
+    ];
+
+    for (url, filename) in downloads {
+        let dest = tmp_data.join(filename);
+        download_file(url, &dest).await?;
+    }
+
+    // Copy config files from local ./data to /tmp/data
+    // Vercel includes included files in the task root
+    let local_data = Path::new("./data");
+    let config_files = ["stopwords-en.txt", "lemmatization-en.txt", "whitelist.txt"];
+
+    for filename in config_files {
+        let src = local_data.join(filename);
+        let dest = tmp_data.join(filename);
+        
+        if src.exists() && !dest.exists() {
+            println!("Copying {:?} to {:?}", src, dest);
+            fs::copy(&src, &dest).await?;
+        } else if !src.exists() {
+            println!("Warning: Local config file not found: {:?}", src);
+        }
+    }
+
+    Ok(())
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Error> {
+    println!("Starting search service...");
+    
+    // Prepare data in /tmp
+    setup_index().await.map_err(|e| {
+        println!("Failed to setup index: {}", e);
+        e
+    })?;
+
+    // Initialize state
+    println!("Loading app state...");
+    // We pass "/tmp" because load_app_state appends "/data/..."
+    // so it will look in "/tmp/data/..."
+    let state = load_app_state(Some("/tmp"))
+        .map_err(|e| Error::from(format!("Failed to load app state: {}", e)))?;
+        
+    APP_STATE.set(state).map_err(|_| Error::from("Failed to set APP_STATE"))?;
+    println!("App state loaded successfully.");
+
     run(service_fn(handler)).await
 }
 
 pub async fn handler(req: Request) -> Result<Value, Error> {
-    // initialize global state if not already initialized
-    let app_state = APP_STATE.get_or_init(|| {
-        println!("Cold start: Loading index...");
-        // On Vercel, files are included in the root lambda directory.
-        // We pass "." to look in current directory.
-        load_app_state(Some(".")).expect("Failed to load app state")
-    });
+    let app_state = APP_STATE.get().ok_or_else(|| Error::from("App state not initialized"))?;
 
     let url = req.uri();
     let query_string = url.query().unwrap_or("");
