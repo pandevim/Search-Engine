@@ -1,8 +1,0 @@
-[package]
-name = "normalization"
-version = "0.1.0"
-edition = "2024"
-
-[dependencies]
-regex = "1.10.3"
-
