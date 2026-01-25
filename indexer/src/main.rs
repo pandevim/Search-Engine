@@ -1,5 +1,5 @@
 use anyhow::{Context, Result};
-use normalization::Normalizer;
+use search_normalizer::Normalizer;
 use scraper::{Html, Selector};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
