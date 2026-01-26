@@ -64,11 +64,22 @@ To reduce the size of the inverted index, the system creates a specialized binar
 
 **Impact**: This optimization reduces the `inverted_index.bin` file size by approximately **75%** (e.g., from ~280 MB to ~67 MB for the full dataset).
 
-### 3. Server (REST API)
+### 3. Semantic Embedder
+
+The semantic search component generates vector embeddings for documents to enable "meaning-based" search alongside keyword search.
+
+#### How it Works
+
+1.  **Text Extraction**: Parses the HTML files listed in `crawled.lst` to extract the Title and Abstract.
+2.  **Embedding**: Uses the `sentence-transformers` library (specifically `all-MiniLM-L6-v2`) to convert text into 384-dimensional dense vectors.
+3.  **Indexing**: Builds a Vector Search Index using **USearch** (`usearch`), a high-performance vector search engine compatible with Rust.
+4.  **Output**: Saves the index to `data/semantic_index.usearch`, enabling the server to perform fast nearest-neighbor search.
+
+### 4. Server (REST API)
 
 The server component exposes the search functionality via a RESTful API using `axum` moved to a separate repository: [search-engine-serve](https://github.com/pandevim/search-engine-serve).
 
-### 4. Client (Web UI)
+### 5. Client (Web UI)
 
 The client is a web interface built with **SvelteKit** that consumes the REST API.
 
@@ -80,6 +91,7 @@ The client is a web interface built with **SvelteKit** that consumes the REST AP
 
 - Rust toolchain (Cargo, rustc)
 - Local Wikipedia dump extracted to `wikipedia-simple-html-dump/` directory
+- Python 3.x (for Semantic Embedder)
 
 ### Configuration
 
@@ -104,6 +116,22 @@ To build the index from the crawled data. This will process the files listed in 
 ```bash
 cargo run --manifest-path indexer/Cargo.toml --release
 ```
+
+### Running the Semantic Embedder
+
+To generate the vector index for semantic search.
+
+1.  Install dependencies:
+
+    ```bash
+    pip install sentence-transformers usearch beautifulsoup4 tqdm
+    ```
+
+2.  Run the embedder script:
+    ```bash
+    python3 semantic_search/embedder.py
+    ```
+    This will generate `data/semantic_index.usearch`.
 
 ## Data Source
 

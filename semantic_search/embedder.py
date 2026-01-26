@@ -1,9 +1,8 @@
-
 import os
 import json
 import numpy as np
-import faiss
 from sentence_transformers import SentenceTransformer
+from usearch.index import Index
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
@@ -12,9 +11,7 @@ DATA_DIR = "data"
 CRAWLED_LIST = os.path.join(DATA_DIR, "crawled.lst")
 WIKI_ROOT = "wikipedia-simple-html-dump"
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
-FAISS_INDEX_PATH = os.path.join(DATA_DIR, "semantic_index.faiss")
-RAW_VECTORS_PATH = os.path.join(DATA_DIR, "embeddings.npy")
-DOC_MAP_PATH = os.path.join(DATA_DIR, "doc_map.json")
+USEARCH_INDEX_PATH = os.path.join(DATA_DIR, "semantic_index.usearch")
 
 def load_documents(crawled_list_path):
     """
@@ -74,7 +71,7 @@ def main():
     # 2. Extract Text
     print("Extracting content from documents...")
     documents = []
-    valid_doc_paths = [] # Keep track of docs we actually successfully processed
+    doc_ids = [] # Keep track of original line numbers (0-indexed) as stable IDs
     
     # Limit for testing/debugging if needed, remove slice for full run
     # doc_paths = doc_paths[:1000] 
@@ -83,7 +80,7 @@ def main():
         text = extract_content(path)
         if text:
             documents.append(text)
-            valid_doc_paths.append(path)
+            doc_ids.append(i) # Store the original index from crawled.lst
     
     print(f"Successfully extracted text from {len(documents)} documents.")
 
@@ -92,48 +89,49 @@ def main():
     model = SentenceTransformer(EMBEDDING_MODEL)
     
     print("Generating embeddings (this may take a while)...")
-    embeddings = model.encode(documents, show_progress_bar=True, convert_to_numpy=True)
+    embeddings = model.encode(documents, show_progress_bar=True, convert_to_numpy=True, normalize_embeddings=True)
     
-    # Normalize embeddings for cosine similarity (FAISS defaults to L2, but normalized L2 == Cosine)
-    print("Normalizing embeddings...")
-    faiss.normalize_L2(embeddings)
+    # 4. Create and Save USearch Index
+    print("Building USearch index...")
+    # metrics: ip (inner product), l2 (euclidean), cos (cosine).
+    # Since vectors are normalized, ip is identical to cosine and usually faster.
+    d = embeddings.shape[1]
+    us_index = Index(ndim=d, metric="ip")
     
-    # 4. Save Raw Vectors (for Rust integration option)
-    print(f"Saving raw vectors to {RAW_VECTORS_PATH}...")
-    np.save(RAW_VECTORS_PATH, embeddings)
+    # USearch expects keys to be integers. 
+    # We use the doc_ids (original line numbers) we collected earlier.
+    keys = np.array(doc_ids, dtype=np.longlong)
+    us_index.add(keys, embeddings)
     
-    # 5. Create and Save FAISS Index
-    print("Building FAISS index...")
-    d = embeddings.shape[1] # Dimension (384 for MiniLM)
-    index = faiss.IndexFlatIP(d) # Inner Product (Cosine Similarity since normalized)
-    index.add(embeddings)
+    print(f"Saving USearch index to {USEARCH_INDEX_PATH}...")
+    us_index.save(USEARCH_INDEX_PATH)
     
-    print(f"Saving FAISS index to {FAISS_INDEX_PATH}...")
-    faiss.write_index(index, FAISS_INDEX_PATH)
-    
-    # 6. Save Document Map
-    # Map index ID -> File Path for retrieval
-    print(f"Saving document map to {DOC_MAP_PATH}...")
-    doc_map = {i: path for i, path in enumerate(valid_doc_paths)}
-    with open(DOC_MAP_PATH, "w") as f:
-        json.dump(doc_map, f, indent=2)
-        
     print("--- Processing Complete ---")
     
     # Simple Verification Test
     test_query = "computer science"
     print(f"\nRunning verification query: '{test_query}'")
-    query_vector = model.encode([test_query])
-    faiss.normalize_L2(query_vector)
+    query_vector = model.encode([test_query], normalize_embeddings=True)
     
     k = 5
-    D, I = index.search(query_vector, k)
+    matches = us_index.search(query_vector, k)
     
     print(f"Top {k} results:")
-    for i in range(k):
-        idx = I[0][i]
-        score = D[0][i]
-        doc_path = doc_map[idx]
+    
+    # Safe way for single query (flattening if needed):
+    us_keys = matches.keys.flatten()
+    us_dists = matches.distances.flatten()
+    
+    for i in range(min(k, len(us_keys))):
+        idx = us_keys[i]
+        score = us_dists[i]
+        
+        # Look up directly in the original loaded doc_paths list
+        if 0 <= idx < len(doc_paths):
+            doc_path = doc_paths[idx]
+        else:
+            doc_path = "Unknown (Index out of bounds)"
+            
         print(f"{i+1}. {doc_path} (Score: {score:.4f})")
 
 if __name__ == "__main__":
